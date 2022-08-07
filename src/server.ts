@@ -6,11 +6,13 @@ import { Application } from 'express';
 import expressPino from 'express-pino-logger';
 import { FunctionalityTypeControllerV1 } from './controllers/functionality-type.v1';
 import { FunctionalityControllerV1 } from './controllers/functionality.v1';
+import { PermissionControllerV1 } from './controllers/permission.v1';
 import { UserControllerV1 } from './controllers/user.v1';
 import logger from './logger';
 import { apiERrorValidator } from './middlewares/api-error-validator';
 import { FunctionalityMongoDBRepository } from './repositories/functionality-mongdb-repository';
 import { FunctionalityTypeMongoDBRepository } from './repositories/functionality-type-mongdb-repository';
+import { PermissionMongoDBRepository } from './repositories/permission-mongdb-repository';
 import { UserMongoDBRepository } from './repositories/user-mongodb-repository';
 
 export class SetupServer extends Server {
@@ -56,11 +58,15 @@ export class SetupServer extends Server {
     const functionalityControllerV1 = new FunctionalityControllerV1(
       new FunctionalityMongoDBRepository(),
     );
+    const permissionControllerV1 = new PermissionControllerV1(
+      new PermissionMongoDBRepository(),
+    );
 
     this.addControllers([
       userControllerV1,
       functionalityTypeControllerV1,
       functionalityControllerV1,
+      permissionControllerV1,
     ]);
   }
 

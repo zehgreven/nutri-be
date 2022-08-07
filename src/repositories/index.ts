@@ -1,5 +1,6 @@
 import { Functionality } from '@src/models/functionality';
 import { FunctionalityType } from '@src/models/functionality-type';
+import { Permission } from '@src/models/permission';
 import { User } from '@src/models/user';
 
 export type WithId<T> = { id: string } & T;
@@ -14,6 +15,8 @@ export interface BaseRepository<T> {
 export type FunctionalityTypeRepository = BaseRepository<FunctionalityType>;
 
 export type FunctionalityRepository = BaseRepository<Functionality>;
+
+export type PermissionRepository = BaseRepository<Permission>;
 
 export interface UserRepository extends BaseRepository<User> {
   findOneById(id: string): Promise<WithId<User> | undefined>;
