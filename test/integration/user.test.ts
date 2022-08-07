@@ -1,7 +1,7 @@
 import AuthService from '@src/services/auth.service';
 import httpStatusCodes from 'http-status-codes';
 import jwt from 'jsonwebtoken';
-import { UserMongoDBRepository } from '@src/repositories/userMongoDBRepository';
+import { UserMongoDBRepository } from '@src/repositories/user-mongodb-repository';
 
 describe('Users functional tests', () => {
   const defaultUserRepository = new UserMongoDBRepository();

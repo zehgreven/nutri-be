@@ -1,3 +1,4 @@
+import { FunctionalityType } from '@src/models/functionality-type';
 import { User } from '@src/models/user';
 
 export type WithId<T> = { id: string } & T;
@@ -8,6 +9,9 @@ export interface BaseRepository<T> {
   findOne(options: Partial<WithId<T>>): Promise<WithId<T> | undefined>;
   deleteAll(): Promise<void>;
 }
+
+export interface FunctionalityTypeRepository
+  extends BaseRepository<FunctionalityType> {}
 
 export interface UserRepository extends BaseRepository<User> {
   findOneById(id: string): Promise<WithId<User> | undefined>;
