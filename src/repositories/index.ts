@@ -1,3 +1,4 @@
+import { Functionality } from '@src/models/functionality';
 import { FunctionalityType } from '@src/models/functionality-type';
 import { User } from '@src/models/user';
 
@@ -10,8 +11,9 @@ export interface BaseRepository<T> {
   deleteAll(): Promise<void>;
 }
 
-export interface FunctionalityTypeRepository
-  extends BaseRepository<FunctionalityType> {}
+export type FunctionalityTypeRepository = BaseRepository<FunctionalityType>;
+
+export type FunctionalityRepository = BaseRepository<Functionality>;
 
 export interface UserRepository extends BaseRepository<User> {
   findOneById(id: string): Promise<WithId<User> | undefined>;

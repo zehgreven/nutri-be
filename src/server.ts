@@ -5,9 +5,11 @@ import cors from 'cors';
 import { Application } from 'express';
 import expressPino from 'express-pino-logger';
 import { FunctionalityTypeControllerV1 } from './controllers/functionality-type.v1';
+import { FunctionalityControllerV1 } from './controllers/functionality.v1';
 import { UserControllerV1 } from './controllers/user.v1';
 import logger from './logger';
 import { apiERrorValidator } from './middlewares/api-error-validator';
+import { FunctionalityMongoDBRepository } from './repositories/functionality-mongdb-repository';
 import { FunctionalityTypeMongoDBRepository } from './repositories/functionality-type-mongdb-repository';
 import { UserMongoDBRepository } from './repositories/user-mongodb-repository';
 
@@ -48,11 +50,18 @@ export class SetupServer extends Server {
 
   private setupControllers(): void {
     const userControllerV1 = new UserControllerV1(new UserMongoDBRepository());
-    const functionalityTypeController = new FunctionalityTypeControllerV1(
+    const functionalityTypeControllerV1 = new FunctionalityTypeControllerV1(
       new FunctionalityTypeMongoDBRepository(),
     );
+    const functionalityControllerV1 = new FunctionalityControllerV1(
+      new FunctionalityMongoDBRepository(),
+    );
 
-    this.addControllers([userControllerV1, functionalityTypeController]);
+    this.addControllers([
+      userControllerV1,
+      functionalityTypeControllerV1,
+      functionalityControllerV1,
+    ]);
   }
 
   private async setupDatabase(): Promise<void> {
