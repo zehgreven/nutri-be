@@ -1,0 +1,19 @@
+{
+  "port": "APP_PORT",
+  "database": {
+    "url": "MONGODB_URL",
+    "port": "MONGODB_PORT",
+    "database": "MONGODB_DATABASE"
+  },
+  "auth": {
+    "key": "JWT_SECRET_KEY",
+    "tokenExpiresIn": "JWT_TOKEN_EXPIRES_IN"
+  },
+  "logger": {
+    "level": "LOGGER_LEVEL"
+  },
+  "rateLimit": {
+    "maxRequestsNumber": "RATE_LIMIT_MAX_REQUESTS_NUMBER",
+    "windowMs": "RATE_LIMIT_WINDOW_MS"
+  }
+}

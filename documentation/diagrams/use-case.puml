@@ -1,0 +1,18 @@
+@startuml Use Case
+
+actor Client
+actor Nutri
+actor Admin
+
+Admin -l-> (Manage Users)
+
+Nutri --> (Manage Clients)
+Nutri -l-> (Manage Diets)
+Nutri -> (Send Message)
+(Manage Clients) <. (Manage Diets) : extends
+
+Client -> (Access Diets)
+Client -> (Send Message)
+(Access Diets) .> (Manage Diets) : extends
+
+@enduml

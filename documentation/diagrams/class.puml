@@ -1,0 +1,132 @@
+@startuml
+
+package iam {
+  class User {
+    String username
+    String password
+    login()
+    createAccount()
+  }
+  User -> Profile
+  User -- Application
+  User -> Permission
+
+  class Profile {
+    String name
+    String description
+  }
+  Profile -> Permission
+
+  class Permission {
+    boolean allow
+  }
+  Permission -> Functionality
+
+  class Application {
+    String name
+    String description
+  }
+  Application -> Profile
+  Application -> Functionality
+
+  class Functionality {
+    String name
+    String description
+    String path
+  }
+  Functionality -> Functionality
+  Functionality -> FunctionalityType
+
+  class FunctionalityType {
+    String name
+    String description
+  }
+
+}
+
+package commom {
+  class Person {
+    String name
+    String email
+    Date birthDate
+    Image picture
+    String gender
+    void methods()
+  }
+  Person -> BodyInfo
+  Person -> Phone
+  Person -> Image
+  User -> Person
+
+  class Phone {
+    String ddi
+    String ddd
+    String number
+  }
+
+  class Image {
+    String name
+    String format
+    String path
+  }
+}
+
+package adress {
+  class Adress {
+    String street
+    String number
+    String complement
+  }
+  Adress -> City
+  Adress -> Zip
+  Person -> Adress
+
+  class Zip {
+    String code
+  }
+
+  class City {
+    String name
+    String code
+  }
+  City -> State
+
+  class State {
+    String name
+    String abbreviation
+    String code
+  }
+  State -> Country
+
+  class Country {
+    String name
+    String abbreviation
+    String code
+  }
+}
+
+package communication {
+  class Message {
+    String text
+    Timestamp datetime
+  }
+  Message *-- User : from
+  Message *-- User : to
+}
+
+package nutri {
+  class BodyInfo {
+    String weight
+    String height
+  }
+
+  class Diet {
+    print()
+    send()
+  }
+  Diet -up- User
+}
+
+
+
+@enduml
