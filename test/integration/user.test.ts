@@ -2,11 +2,69 @@ import AuthService from '@src/services/auth.service';
 import httpStatusCodes from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 import { UserMongoDBRepository } from '@src/repositories/user-mongodb-repository';
+import { FunctionalityMongoDBRepository } from '@src/repositories/functionality-mongdb-repository';
+import { FunctionalityTypeMongoDBRepository } from '@src/repositories/functionality-type-mongdb-repository';
+import { PermissionMongoDBRepository } from '@src/repositories/permission-mongdb-repository';
+import { ProfileMongoDBRepository } from '@src/repositories/profile-mongdb-repository';
+import { ExistingProfile } from '@src/models/Profile';
+import { ExistingPermission } from '@src/models/permission';
 
 describe('Users functional tests', () => {
-  const defaultUserRepository = new UserMongoDBRepository();
+  const functionalityRepository = new FunctionalityMongoDBRepository();
+  const functionalityTypeRepository = new FunctionalityTypeMongoDBRepository();
+  const permissionRepository = new PermissionMongoDBRepository();
+  const profileRepository = new ProfileMongoDBRepository();
+  const userRepository = new UserMongoDBRepository();
+
+  let defaultProfile: ExistingProfile;
+  let permissionBFalse: ExistingPermission;
+
   beforeEach(async () => {
-    await defaultUserRepository.deleteAll();
+    await profileRepository.deleteAll();
+    await permissionRepository.deleteAll();
+    await functionalityRepository.deleteAll();
+    await functionalityTypeRepository.deleteAll();
+    await userRepository.deleteAll();
+
+    const type = await functionalityTypeRepository.create({
+      name: 'Sidebar button',
+      description: 'Sidebar button',
+    });
+
+    const functionalityA = await functionalityRepository.create({
+      name: 'Home',
+      description: 'Home button from sidebar',
+      path: '/',
+      functionalityTypeId: type.id,
+    });
+
+    const functionalityB = await functionalityRepository.create({
+      name: 'Invalid',
+      description: 'Invalid button from sidebar',
+      path: '/',
+      functionalityTypeId: type.id,
+    });
+
+    const permissionA = await permissionRepository.create({
+      allow: true,
+      functionalityId: functionalityA.id,
+    });
+
+    const permissionBTrue = await permissionRepository.create({
+      allow: true,
+      functionalityId: functionalityB.id,
+    });
+
+    permissionBFalse = await permissionRepository.create({
+      allow: false,
+      functionalityId: functionalityB.id,
+    });
+
+    defaultProfile = await profileRepository.create({
+      name: 'Admin',
+      description: 'This represents the administrators profile',
+      permissions: [permissionA.id, permissionBTrue.id],
+    });
   });
 
   describe('When creating a new user', () => {
@@ -15,6 +73,8 @@ describe('Users functional tests', () => {
         name: 'John Doe',
         email: 'john@mail.com',
         password: '1234',
+        profiles: [defaultProfile.id],
+        permissions: [permissionBFalse.id],
       };
 
       const { status, body } = await global.testRequest
@@ -56,6 +116,8 @@ describe('Users functional tests', () => {
         name: 'John Doe',
         email: 'john@mail.com',
         password: '1234',
+        profiles: [],
+        permissions: [],
       };
       // 1st time
       await global.testRequest.post('/user/v1').send(newUser);
@@ -81,15 +143,18 @@ describe('Users functional tests', () => {
         name: 'John Doe',
         email: 'john@mail.com',
         password: '1234',
+        profiles: [],
+        permissions: [],
       };
 
-      const user = await defaultUserRepository.create(newUser);
+      const user = await userRepository.create(newUser);
 
       const { status, body } = await global.testRequest
         .post('/user/v1/authenticate')
         .send({
           email: newUser.email,
           password: newUser.password,
+          profiles: [],
         });
 
       expect(status).toBe(200);
@@ -119,9 +184,11 @@ describe('Users functional tests', () => {
         name: 'John Doe',
         email: 'john@mail.com',
         password: '1234',
+        profiles: [],
+        permissions: [],
       };
 
-      await defaultUserRepository.create(newUser);
+      await userRepository.create(newUser);
 
       const { status, body } = await global.testRequest
         .post('/user/v1/authenticate')
@@ -145,9 +212,11 @@ describe('Users functional tests', () => {
         name: 'John Doe',
         email: 'john@mail.com',
         password: '1234',
+        profiles: [],
+        permissions: [],
       };
 
-      const user = await defaultUserRepository.create(newUser);
+      const user = await userRepository.create(newUser);
       const token = AuthService.generateToken(user.id);
       const { body, status } = await global.testRequest
         .get('/user/v1/me')
@@ -163,7 +232,7 @@ describe('Users functional tests', () => {
       );
     });
 
-    it.only('Should return not found when the user is not found', async () => {
+    it('Should return not found when the user is not found', async () => {
       const token = AuthService.generateToken('fake-user-id');
       const { body, status } = await global.testRequest
         .get('/user/v1/me')

@@ -35,21 +35,28 @@ describe('Functionality functional tests', () => {
       description: 'Sidebar button',
     });
 
-    const functionality = await functionalityRepository.create({
+    const functionalityA = await functionalityRepository.create({
       name: 'Home',
       description: 'Home button from sidebar',
       path: '/',
       functionalityTypeId: type.id,
     });
 
+    const functionalityB = await functionalityRepository.create({
+      name: 'Invalid',
+      description: 'Invalid button from sidebar',
+      path: '/',
+      functionalityTypeId: type.id,
+    });
+
     const permissionA = await permissionRepository.create({
       allow: true,
-      functionalityId: functionality.id,
+      functionalityId: functionalityA.id,
     });
 
     const permissionB = await permissionRepository.create({
       allow: true,
-      functionalityId: functionality.id,
+      functionalityId: functionalityB.id,
     });
 
     defaultProfile = {

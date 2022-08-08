@@ -17,7 +17,7 @@ export abstract class DefaultMongoDBRepository<
     super();
   }
 
-  public async create(data: T) {
+  public async create(data: T): Promise<WithId<T>> {
     try {
       const model = new this.model(data);
       const createdData = await model.save();

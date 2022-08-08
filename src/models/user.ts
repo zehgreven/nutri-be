@@ -7,6 +7,8 @@ export interface User extends BaseModel {
   name: string;
   email: string;
   password: string;
+  profiles: string[];
+  permissions: string[];
 }
 
 export interface ExistingUser extends User {
@@ -25,6 +27,20 @@ const schema = new mongoose.Schema<User>(
       required: true,
     },
     password: { type: String, required: true },
+    profiles: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Profile',
+        required: true,
+      },
+    ],
+    permissions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Permission',
+        required: true,
+      },
+    ],
   },
   {
     toJSON: {
@@ -32,6 +48,8 @@ const schema = new mongoose.Schema<User>(
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
+        ret.profiles = ret.profiles.map((p: string) => p.toString());
+        ret.permissions = ret.permissions.map((p: string) => p.toString());
       },
     },
   },
