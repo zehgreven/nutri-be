@@ -1,6 +1,7 @@
 import { Functionality } from '@src/models/functionality';
 import { FunctionalityType } from '@src/models/functionality-type';
 import { Permission } from '@src/models/permission';
+import { Person } from '@src/models/person';
 import { Profile } from '@src/models/Profile';
 import { User } from '@src/models/user';
 
@@ -20,6 +21,8 @@ export type FunctionalityRepository = BaseRepository<Functionality>;
 export type PermissionRepository = BaseRepository<Permission>;
 
 export type ProfileRepository = BaseRepository<Profile>;
+
+export type PersonRepository = BaseRepository<Person>;
 
 export interface UserRepository extends BaseRepository<User> {
   findOneById(id: string): Promise<WithId<User> | undefined>;
