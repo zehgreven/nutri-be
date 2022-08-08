@@ -27,6 +27,8 @@ describe('Functionality functional tests', () => {
       name: 'John Doe',
       email: 'john@mail.com',
       password: '1234',
+      permissions: [],
+      profiles: [],
     };
     const user = await userRepository.create(defaultUser);
 

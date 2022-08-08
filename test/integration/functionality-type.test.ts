@@ -10,6 +10,8 @@ describe('Functionality Type functional tests', () => {
     name: 'John Doe',
     email: 'john@mail.com',
     password: '1234',
+    permissions: [],
+    profiles: [],
   };
   let token: string;
   let functionalityType: FunctionalityType;
