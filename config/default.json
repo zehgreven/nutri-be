@@ -14,7 +14,7 @@
     "level": "info"
   },
   "rateLimit": {
-    "maxRequestsNumber": 10,
+    "maxRequestsNumber": 100,
     "windowMs": 60000
   }
 }

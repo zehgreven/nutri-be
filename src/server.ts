@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import { Application } from 'express';
 import expressPino from 'express-pino-logger';
+import { ClientControllerV1 } from './controllers/client.v1';
 import { FunctionalityTypeControllerV1 } from './controllers/functionality-type.v1';
 import { FunctionalityControllerV1 } from './controllers/functionality.v1';
 import { PermissionControllerV1 } from './controllers/permission.v1';
@@ -71,6 +72,9 @@ export class SetupServer extends Server {
     const personControllerV1 = new PersonControllerV1(
       new PersonMongoDBRepository(),
     );
+    const clientControllerV1 = new ClientControllerV1(
+      new UserMongoDBRepository(),
+    );
 
     this.addControllers([
       userControllerV1,
@@ -79,6 +83,7 @@ export class SetupServer extends Server {
       permissionControllerV1,
       profileControllerV1,
       personControllerV1,
+      clientControllerV1,
     ]);
   }
 

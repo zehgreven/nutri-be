@@ -4,12 +4,23 @@ import { Permission } from '@src/models/permission';
 import { Person } from '@src/models/person';
 import { Profile } from '@src/models/Profile';
 import { User } from '@src/models/user';
+import { Paging } from './default-mongodb-repository';
 
 export type WithId<T> = { id: string } & T;
 
+export type Paginated<T> = {
+  result: WithId<T>[];
+  page: number;
+  previousPage: number | undefined;
+  nextPage: number | undefined;
+  totalPages: number;
+  limit: number;
+  count: number;
+};
+
 export interface BaseRepository<T> {
   create(data: T): Promise<WithId<T>>;
-  findAll(options: Partial<WithId<T>>): Promise<WithId<T>[]>;
+  findAll(options: Partial<WithId<T>>, paging: Paging): Promise<Paginated<T>>;
   findOne(options: Partial<WithId<T>>): Promise<WithId<T> | undefined>;
   deleteAll(): Promise<void>;
 }

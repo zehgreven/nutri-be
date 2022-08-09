@@ -2,13 +2,18 @@ import logger from '@src/logger';
 import { BaseModel } from '@src/models';
 import { CustomValidation } from '@src/models/user';
 import { Error, Model } from 'mongoose';
-import { WithId } from '.';
+import { Paginated, WithId } from '.';
 import {
   DatabaseInternalError,
   DatabaseUnknownClientError,
   DatabaseValidationError,
   Repository,
 } from './repository';
+
+export interface Paging {
+  page: number;
+  limit: number;
+}
 
 export abstract class DefaultMongoDBRepository<
   T extends BaseModel,
@@ -17,7 +22,7 @@ export abstract class DefaultMongoDBRepository<
     super();
   }
 
-  public async create(data: T): Promise<WithId<T>> {
+  public async create(data: T) {
     try {
       const model = new this.model(data);
       const createdData = await model.save();
@@ -30,16 +35,46 @@ export abstract class DefaultMongoDBRepository<
   async findOne(options: Partial<WithId<T>>) {
     try {
       const data = await this.model.findOne(options);
+
       return data?.toJSON<WithId<T>>({ flattenMaps: false });
     } catch (error) {
       this.handleError(error);
     }
   }
 
-  public async findAll(filter: Partial<WithId<T>>) {
+  public async findAll(options: Partial<WithId<T>>, paging: Paging) {
     try {
-      const data = await this.model.find(filter);
-      return data.map(d => d.toJSON<WithId<T>>({ flattenMaps: false }));
+      const { limit, page } = paging;
+
+      const query = {};
+      Object.entries({ ...options }).map((val, _, __) => {
+        if (typeof options[val[0]] === 'string') {
+          query[val[0]] = { $regex: val[1], $options: 'i' };
+        } else {
+          query[val[0]] = val[1];
+        }
+      });
+
+      const data = await this.model
+        .find(query)
+        .skip(limit * page)
+        .limit(limit);
+
+      const count = await this.model.countDocuments(query);
+
+      const previousPage = page > 0 ? page : undefined;
+      const totalPages = Math.max(count / limit, 1);
+      const nextPage = page + 2 > totalPages ? undefined : page + 2;
+
+      return {
+        result: data.map(d => d.toJSON<WithId<T>>({ flattenMaps: false })),
+        page: page + 1,
+        previousPage,
+        nextPage,
+        totalPages,
+        limit,
+        count,
+      };
     } catch (error) {
       this.handleError(error);
     }

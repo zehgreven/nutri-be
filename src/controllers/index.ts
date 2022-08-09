@@ -1,13 +1,14 @@
 import ApiError, { APIError } from '@src/errors/api-error';
 import logger from '@src/logger';
+import { Paging } from '@src/repositories/default-mongodb-repository';
 import {
   DatabaseError,
   DatabaseUnknownClientError,
   DatabaseValidationError,
 } from '@src/repositories/repository';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
-export abstract class BaseController {
+export abstract class BaseController<T> {
   protected sendCreateUpdateErrorResponse(
     res: Response,
     error: unknown,
@@ -41,5 +42,17 @@ export abstract class BaseController {
   protected sendErrorResponse(res: Response, apiError: APIError): Response {
     logger.error(JSON.stringify(apiError));
     return res.status(apiError.code).send(ApiError.format(apiError));
+  }
+
+  protected paginated(req: Request): Paging {
+    const { page, limit } = req.query;
+
+    const _page = Math.max(0, Number(page) - 1);
+    const _limit = Math.max(1, limit ? Number(limit) : 100);
+
+    return {
+      page: _page,
+      limit: _limit,
+    };
   }
 }

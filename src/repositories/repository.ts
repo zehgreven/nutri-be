@@ -1,4 +1,5 @@
-import { BaseRepository, WithId } from '.';
+import { BaseRepository, Paginated, WithId } from '.';
+import { Paging } from './default-mongodb-repository';
 
 export class DatabaseError extends Error {
   constructor(message: string) {
@@ -19,7 +20,10 @@ export abstract class Repository<T> implements BaseRepository<T> {
     options: Partial<WithId<T>>,
   ): Promise<WithId<T> | undefined>;
 
-  public abstract findAll(filter: Partial<WithId<T>>): Promise<WithId<T>[]>;
+  public abstract findAll(
+    filter: Partial<WithId<T>>,
+    paging: Paging,
+  ): Promise<Paginated<T>>;
 
   public abstract deleteAll(): Promise<void>;
 }
