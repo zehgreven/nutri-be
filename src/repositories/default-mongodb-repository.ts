@@ -63,7 +63,7 @@ export abstract class DefaultMongoDBRepository<
       const count = await this.model.countDocuments(query);
 
       const previousPage = page > 0 ? page : undefined;
-      const totalPages = Math.max(count / limit, 1);
+      const totalPages = Math.max(Math.ceil(count / limit), 1);
       const nextPage = page + 2 > totalPages ? undefined : page + 2;
 
       return {
