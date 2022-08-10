@@ -6,7 +6,7 @@ import { FunctionalityMongoDBRepository } from '@src/repositories/functionality-
 import { FunctionalityTypeMongoDBRepository } from '@src/repositories/functionality-type-mongdb-repository';
 import { PermissionMongoDBRepository } from '@src/repositories/permission-mongdb-repository';
 import { ProfileMongoDBRepository } from '@src/repositories/profile-mongdb-repository';
-import { ExistingProfile } from '@src/models/Profile';
+import { ExistingProfile } from '@src/models/profile';
 import { ExistingPermission } from '@src/models/permission';
 
 describe('Users functional tests', () => {

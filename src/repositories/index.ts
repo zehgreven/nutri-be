@@ -2,7 +2,7 @@ import { Functionality } from '@src/models/functionality';
 import { FunctionalityType } from '@src/models/functionality-type';
 import { Permission } from '@src/models/permission';
 import { Person } from '@src/models/person';
-import { Profile } from '@src/models/Profile';
+import { Profile } from '@src/models/profile';
 import { User } from '@src/models/user';
 import { Paging } from './default-mongodb-repository';
 

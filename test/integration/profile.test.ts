@@ -1,4 +1,4 @@
-import { Profile } from '@src/models/Profile';
+import { Profile } from '@src/models/profile';
 import { FunctionalityMongoDBRepository } from '@src/repositories/functionality-mongdb-repository';
 import { FunctionalityTypeMongoDBRepository } from '@src/repositories/functionality-type-mongdb-repository';
 import { PermissionMongoDBRepository } from '@src/repositories/permission-mongdb-repository';
