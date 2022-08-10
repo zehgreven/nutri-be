@@ -45,7 +45,10 @@ export class PersonControllerV1 extends BaseController {
         return;
       }
 
-      const result = await this.personRepository.findAll({});
+      const result = await this.personRepository.findAll(
+        {},
+        this.paginated(req),
+      );
       res.status(200).send(result);
     } catch (error) {
       this.sendErrorResponse(res, {

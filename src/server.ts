@@ -74,6 +74,7 @@ export class SetupServer extends Server {
     );
     const clientControllerV1 = new ClientControllerV1(
       new UserMongoDBRepository(),
+      new ProfileMongoDBRepository(),
     );
 
     this.addControllers([

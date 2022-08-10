@@ -47,7 +47,10 @@ export class FunctionalityTypeControllerV1 extends BaseController {
         return;
       }
 
-      const result = await this.functionalityTypeRepository.findAll({});
+      const result = await this.functionalityTypeRepository.findAll(
+        {},
+        this.paginated(req),
+      );
       res.status(200).send(result);
     } catch (error) {
       this.sendErrorResponse(res, {

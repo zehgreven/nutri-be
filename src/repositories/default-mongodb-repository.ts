@@ -2,7 +2,7 @@ import logger from '@src/logger';
 import { BaseModel } from '@src/models';
 import { CustomValidation } from '@src/models/user';
 import { Error, Model } from 'mongoose';
-import { Paginated, WithId } from '.';
+import { WithId } from '.';
 import {
   DatabaseInternalError,
   DatabaseUnknownClientError,

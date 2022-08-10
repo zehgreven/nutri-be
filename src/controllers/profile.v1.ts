@@ -45,7 +45,10 @@ export class ProfileControllerV1 extends BaseController {
         return;
       }
 
-      const result = await this.profileRepository.findAll({});
+      const result = await this.profileRepository.findAll(
+        {},
+        this.paginated(req),
+      );
       res.status(200).send(result);
     } catch (error) {
       this.sendErrorResponse(res, {

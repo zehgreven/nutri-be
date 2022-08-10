@@ -8,7 +8,7 @@ import {
 } from '@src/repositories/repository';
 import { Request, Response } from 'express';
 
-export abstract class BaseController<T> {
+export abstract class BaseController {
   protected sendCreateUpdateErrorResponse(
     res: Response,
     error: unknown,
