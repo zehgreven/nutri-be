@@ -20,7 +20,7 @@ export type Paginated<T> = {
 
 export interface BaseRepository<T> {
   create(data: T): Promise<WithId<T>>;
-  update(id: string, data: T): Promise<WithId<T>>;
+  update(id: string, data: T): Promise<void>;
   findAll(options: Partial<WithId<T>>, paging: Paging): Promise<Paginated<T>>;
   findOne(options: Partial<WithId<T>>): Promise<WithId<T> | undefined>;
   deleteAll(): Promise<void>;

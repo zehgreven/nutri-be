@@ -32,14 +32,14 @@ export abstract class DefaultMongoDBRepository<
     }
   }
 
-  public async update(id: string, data: WithId<T>) {
+  public async update(_id: string, data: WithId<T>) {
     try {
-      if (id !== data.id) {
+      if (_id !== data.id) {
         throw new Error('Property ID and Object ID are not matching');
       }
 
-      const model = new this.model(data);
-      await model.updateOne();
+      const model = new this.model({ ...data, _id });
+      await model.update(model);
     } catch (error) {
       this.handleError(error);
     }
