@@ -45,6 +45,14 @@ export abstract class DefaultMongoDBRepository<
     }
   }
 
+  public async delete(_id: string) {
+    try {
+      await this.model.remove({ _id });
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
   async findOne(options: Partial<WithId<T>>) {
     try {
       const data = await this.model.findOne(options);
