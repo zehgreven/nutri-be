@@ -15,6 +15,7 @@ const schema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     description: { type: String },
+    active: { type: Boolean, default: false },
   },
   {
     toJSON: {
