@@ -4,6 +4,7 @@ import { authMiddleware } from '@src/middlewares/auth';
 import { rateLimiter } from '@src/middlewares/rate-limit';
 import { ProfileRepository } from '@src/repositories';
 import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
 
 @Controller('profile/v1')
@@ -19,7 +20,7 @@ export class ProfileControllerV1 extends BaseController {
     try {
       if (!req.context?.userId) {
         this.sendErrorResponse(res, {
-          code: 500,
+          code: StatusCodes.INTERNAL_SERVER_ERROR,
           message: 'Something went wrong',
         });
         logger.error('Missing userId');
@@ -38,7 +39,7 @@ export class ProfileControllerV1 extends BaseController {
     try {
       if (!req.context?.userId) {
         this.sendErrorResponse(res, {
-          code: 500,
+          code: StatusCodes.INTERNAL_SERVER_ERROR,
           message: 'Something went wrong',
         });
         logger.error('Missing userId');
@@ -49,10 +50,10 @@ export class ProfileControllerV1 extends BaseController {
         {},
         this.paginated(req),
       );
-      res.status(200).send(result);
+      res.status(StatusCodes.OK).send(result);
     } catch (error) {
       this.sendErrorResponse(res, {
-        code: 500,
+        code: StatusCodes.INTERNAL_SERVER_ERROR,
         message: 'Something went wrong',
       });
     }

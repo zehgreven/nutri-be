@@ -2,6 +2,7 @@ import AuthService from '@src/services/auth.service';
 import { UserMongoDBRepository } from '@src/repositories/user-mongodb-repository';
 import { PersonMongoDBRepository } from '@src/repositories/person-mongdb-repository';
 import { Person } from '@src/models/person';
+import { StatusCodes } from 'http-status-codes';
 
 describe('Person functional tests', () => {
   const personRepository = new PersonMongoDBRepository();
@@ -61,9 +62,9 @@ describe('Person functional tests', () => {
         .set({ 'x-access-token': token })
         .send(newPerson);
 
-      expect(status).toBe(500);
+      expect(status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
       expect(body).toEqual({
-        code: 500,
+        code: StatusCodes.INTERNAL_SERVER_ERROR,
         error: 'Internal Server Error',
         message: 'Something went wrong',
       });
@@ -81,7 +82,7 @@ describe('Person functional tests', () => {
         birthDate: '1998-09-19T03:00:00.000Z',
       };
 
-      expect(status).toBe(200);
+      expect(status).toBe(StatusCodes.OK);
       expect(body).toEqual([compare]);
     });
   });

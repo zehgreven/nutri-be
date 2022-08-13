@@ -1,7 +1,8 @@
-import AuthService from '@src/services/auth.service';
-import { UserMongoDBRepository } from '@src/repositories/user-mongodb-repository';
-import { FunctionalityTypeMongoDBRepository } from '@src/repositories/functionality-type-mongdb-repository';
 import { FunctionalityType } from '@src/models/functionality-type';
+import { FunctionalityTypeMongoDBRepository } from '@src/repositories/functionality-type-mongdb-repository';
+import { UserMongoDBRepository } from '@src/repositories/user-mongodb-repository';
+import AuthService from '@src/services/auth.service';
+import { StatusCodes } from 'http-status-codes';
 
 describe('Functionality Type functional tests', () => {
   const functionalityTypeRepository = new FunctionalityTypeMongoDBRepository();
@@ -59,9 +60,9 @@ describe('Functionality Type functional tests', () => {
         .set({ 'x-access-token': token })
         .send(newFunctionalityType);
 
-      expect(status).toBe(500);
+      expect(status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
       expect(body).toEqual({
-        code: 500,
+        code: StatusCodes.INTERNAL_SERVER_ERROR,
         error: 'Internal Server Error',
         message: 'Something went wrong',
       });
@@ -74,7 +75,7 @@ describe('Functionality Type functional tests', () => {
         .set({ 'x-access-token': token })
         .send();
 
-      expect(status).toBe(200);
+      expect(status).toBe(StatusCodes.OK);
       expect(body).toEqual([functionalityType]);
     });
   });

@@ -1,5 +1,5 @@
 import AuthService from '@src/services/auth.service';
-import httpStatusCodes from 'http-status-codes';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 import { UserMongoDBRepository } from '@src/repositories/user-mongodb-repository';
 import { FunctionalityMongoDBRepository } from '@src/repositories/functionality-mongdb-repository';
@@ -106,7 +106,7 @@ describe('Users functional tests', () => {
       expect(status).toBe(400);
       expect(body).toEqual({
         code: 400,
-        error: httpStatusCodes.getStatusText(400),
+        error: getReasonPhrase(400),
         message: 'User validation failed: name: Path `name` is required.',
       });
     });
@@ -130,7 +130,7 @@ describe('Users functional tests', () => {
       expect(status).toBe(409);
       expect(body).toEqual({
         code: 409,
-        error: httpStatusCodes.getStatusText(409),
+        error: getReasonPhrase(409),
         message:
           'User validation failed: email: already exists in the database.',
       });
@@ -157,7 +157,7 @@ describe('Users functional tests', () => {
           profiles: [],
         });
 
-      expect(status).toBe(200);
+      expect(status).toBe(StatusCodes.OK);
       expect(body).toEqual(
         expect.objectContaining({ token: expect.any(String) }),
       );
@@ -173,7 +173,7 @@ describe('Users functional tests', () => {
       expect(status).toBe(401);
       expect(body).toEqual({
         code: 401,
-        error: httpStatusCodes.getStatusText(401),
+        error: getReasonPhrase(401),
         message: 'User not found!',
         description: 'Try verifying your email address.',
       });
@@ -199,7 +199,7 @@ describe('Users functional tests', () => {
       expect(status).toBe(401);
       expect(body).toEqual({
         code: 401,
-        error: httpStatusCodes.getStatusText(401),
+        error: getReasonPhrase(401),
         message: 'Password does not match!',
       });
     });
@@ -222,7 +222,7 @@ describe('Users functional tests', () => {
         .get('/user/v1/me')
         .set({ 'x-access-token': token });
 
-      expect(status).toBe(200);
+      expect(status).toBe(StatusCodes.OK);
       expect(body).toMatchObject(
         JSON.parse(
           JSON.stringify({

@@ -7,6 +7,7 @@ import {
   DatabaseValidationError,
 } from '@src/repositories/repository';
 import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
 export abstract class BaseController {
   protected sendCreateUpdateErrorResponse(
@@ -21,7 +22,7 @@ export abstract class BaseController {
       this.sendErrorResponse(res, clientErrors);
     } else {
       this.sendErrorResponse(res, {
-        code: 500,
+        code: StatusCodes.INTERNAL_SERVER_ERROR,
         message: 'Something went wrong',
       });
     }

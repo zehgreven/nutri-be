@@ -10,6 +10,7 @@ import { rateLimiter } from '@src/middlewares/rate-limit';
 import { UserRepository } from '@src/repositories';
 import AuthService from '@src/services/auth.service';
 import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
 
 @Controller('user/v1')
@@ -55,7 +56,7 @@ export class UserControllerV1 extends BaseController {
 
     const token = AuthService.generateToken(user.id);
 
-    return res.status(200).send({ token });
+    return res.status(StatusCodes.OK).send({ token });
   }
 
   @Get('me')

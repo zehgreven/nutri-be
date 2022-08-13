@@ -32,6 +32,19 @@ export abstract class DefaultMongoDBRepository<
     }
   }
 
+  public async update(id: string, data: WithId<T>) {
+    try {
+      if (id !== data.id) {
+        throw new Error('Property ID and Object ID are not matching');
+      }
+
+      const model = new this.model(data);
+      await model.updateOne();
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
   async findOne(options: Partial<WithId<T>>) {
     try {
       const data = await this.model.findOne(options);

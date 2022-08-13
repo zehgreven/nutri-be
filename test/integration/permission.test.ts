@@ -1,10 +1,10 @@
-import { Functionality } from '@src/models/functionality';
 import { Permission } from '@src/models/permission';
 import { FunctionalityMongoDBRepository } from '@src/repositories/functionality-mongdb-repository';
 import { FunctionalityTypeMongoDBRepository } from '@src/repositories/functionality-type-mongdb-repository';
 import { PermissionMongoDBRepository } from '@src/repositories/permission-mongdb-repository';
 import { UserMongoDBRepository } from '@src/repositories/user-mongodb-repository';
 import AuthService from '@src/services/auth.service';
+import { StatusCodes } from 'http-status-codes';
 
 describe('Functionality functional tests', () => {
   const functionalityRepository = new FunctionalityMongoDBRepository();
@@ -72,9 +72,9 @@ describe('Functionality functional tests', () => {
         .set({ 'x-access-token': token })
         .send(defaultPermission);
 
-      expect(status).toBe(500);
+      expect(status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
       expect(body).toEqual({
-        code: 500,
+        code: StatusCodes.INTERNAL_SERVER_ERROR,
         error: 'Internal Server Error',
         message: 'Something went wrong',
       });
@@ -89,7 +89,7 @@ describe('Functionality functional tests', () => {
         .set({ 'x-access-token': token })
         .send();
 
-      expect(status).toBe(200);
+      expect(status).toBe(StatusCodes.OK);
       expect(body).toEqual([permission]);
     });
   });
