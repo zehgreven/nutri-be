@@ -4,6 +4,7 @@ import { BaseModel } from '.';
 export interface FunctionalityType extends BaseModel {
   name: string;
   description: string;
+  active: boolean;
 }
 
 export interface ExistingFunctionalityType extends FunctionalityType {
