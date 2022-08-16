@@ -47,7 +47,7 @@ export class PermissionControllerV1 extends BaseController {
       }
 
       const result = await this.permissionRepository.findAll(
-        {},
+        req.query,
         this.paginated(req),
       );
       res.status(StatusCodes.OK).send(result);

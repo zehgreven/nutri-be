@@ -47,7 +47,7 @@ export class FunctionalityControllerV1 extends BaseController {
       }
 
       const result = await this.functionalityRepository.findAll(
-        {},
+        req.query,
         this.paginated(req),
       );
       res.status(StatusCodes.OK).send(result);

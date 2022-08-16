@@ -116,7 +116,7 @@ export class FunctionalityTypeControllerV1 extends BaseController {
       }
 
       const result = await this.functionalityTypeRepository.findAll(
-        {},
+        req.query,
         this.paginated(req),
       );
       res.status(StatusCodes.OK).send(result);

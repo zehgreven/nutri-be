@@ -47,7 +47,7 @@ export class PersonControllerV1 extends BaseController {
       }
 
       const result = await this.personRepository.findAll(
-        {},
+        req.query,
         this.paginated(req),
       );
       res.status(StatusCodes.OK).send(result);

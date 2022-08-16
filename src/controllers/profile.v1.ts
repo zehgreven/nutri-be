@@ -47,7 +47,7 @@ export class ProfileControllerV1 extends BaseController {
       }
 
       const result = await this.profileRepository.findAll(
-        {},
+        req.query,
         this.paginated(req),
       );
       res.status(StatusCodes.OK).send(result);
