@@ -11,7 +11,7 @@ import { BaseController } from '.';
 @ClassMiddleware(authMiddleware)
 @ClassMiddleware(rateLimiter)
 export class FunctionalityControllerV1 extends BaseController {
-  constructor(private functionalityRepository: FunctionalityRepository) {
+  constructor(private repository: FunctionalityRepository) {
     super();
   }
 
@@ -27,7 +27,7 @@ export class FunctionalityControllerV1 extends BaseController {
         return;
       }
 
-      const result = await this.functionalityRepository.create(req.body);
+      const result = await this.repository.create(req.body);
       res.status(201).send(result);
     } catch (error) {
       this.sendCreateUpdateErrorResponse(res, error);
@@ -46,10 +46,43 @@ export class FunctionalityControllerV1 extends BaseController {
         return;
       }
 
-      const result = await this.functionalityRepository.findAll(
+      const result = await this.repository.findAll(
         req.query,
         this.paginated(req),
       );
+      res.status(StatusCodes.OK).send(result);
+    } catch (error) {
+      this.sendErrorResponse(res, {
+        code: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Something went wrong',
+      });
+    }
+  }
+
+  @Get(':id')
+  public async getById(req: Request, res: Response): Promise<void> {
+    try {
+      if (!req.context?.userId) {
+        this.sendErrorResponse(res, {
+          code: StatusCodes.INTERNAL_SERVER_ERROR,
+          message: 'Something went wrong',
+        });
+        logger.error('Missing userId');
+        return;
+      }
+
+      if (!req.params?.id) {
+        this.sendErrorResponse(res, {
+          code: StatusCodes.INTERNAL_SERVER_ERROR,
+          message: 'Something went wrong',
+        });
+        logger.error('Missing parameter id');
+        return;
+      }
+
+      const result = await this.repository.findOne({
+        id: req.params.id,
+      });
       res.status(StatusCodes.OK).send(result);
     } catch (error) {
       this.sendErrorResponse(res, {
