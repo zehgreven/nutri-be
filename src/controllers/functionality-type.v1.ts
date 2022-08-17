@@ -18,9 +18,7 @@ import { BaseController } from '.';
 @ClassMiddleware(authMiddleware)
 @ClassMiddleware(rateLimiter)
 export class FunctionalityTypeControllerV1 extends BaseController {
-  constructor(
-    private functionalityTypeRepository: FunctionalityTypeRepository,
-  ) {
+  constructor(private repository: FunctionalityTypeRepository) {
     super();
   }
 
@@ -36,7 +34,7 @@ export class FunctionalityTypeControllerV1 extends BaseController {
         return;
       }
 
-      const result = await this.functionalityTypeRepository.create(req.body);
+      const result = await this.repository.create(req.body);
       res.status(StatusCodes.CREATED).send(result);
     } catch (error) {
       this.sendCreateUpdateErrorResponse(res, error);
@@ -66,7 +64,7 @@ export class FunctionalityTypeControllerV1 extends BaseController {
         return;
       }
 
-      await this.functionalityTypeRepository.update(requestParamId, req.body);
+      await this.repository.update(requestParamId, req.body);
       res.status(StatusCodes.NO_CONTENT).send();
     } catch (error) {
       this.sendCreateUpdateErrorResponse(res, error);
@@ -96,7 +94,7 @@ export class FunctionalityTypeControllerV1 extends BaseController {
         return;
       }
 
-      await this.functionalityTypeRepository.delete(requestParamId);
+      await this.repository.delete(requestParamId);
       res.status(StatusCodes.NO_CONTENT).send();
     } catch (error) {
       this.sendCreateUpdateErrorResponse(res, error);
@@ -115,7 +113,7 @@ export class FunctionalityTypeControllerV1 extends BaseController {
         return;
       }
 
-      const result = await this.functionalityTypeRepository.findAll(
+      const result = await this.repository.findAll(
         req.query,
         this.paginated(req),
       );
@@ -148,9 +146,8 @@ export class FunctionalityTypeControllerV1 extends BaseController {
         logger.error('Missing parameter id');
         return;
       }
-
-      const result = await this.functionalityTypeRepository.findOne({
-        id: req.params.id,
+      const result = await this.repository.findOne({
+        _id: req.params.id,
       });
       res.status(StatusCodes.OK).send(result);
     } catch (error) {
