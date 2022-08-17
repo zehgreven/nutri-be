@@ -6,7 +6,7 @@ import { Profile } from '@src/models/profile';
 import { User } from '@src/models/user';
 import { Paging } from './default-mongodb-repository';
 
-export type WithId<T> = { id: string } & T;
+export type WithId<T> = { id: string; _id?: string } & T;
 
 export type Paginated<T> = {
   result: WithId<T>[];
