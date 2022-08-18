@@ -4,7 +4,6 @@ import { BaseModel } from '.';
 export interface Profile extends BaseModel {
   name: string;
   description: string;
-  permissions: string[];
 }
 
 export interface ExistingProfile extends Profile {
@@ -17,13 +16,6 @@ const schema = new mongoose.Schema(
     description: { type: String },
     path: { type: String },
     active: { type: Boolean, default: false },
-    permissions: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Permission',
-        required: true,
-      },
-    ],
   },
   {
     toJSON: {
@@ -31,7 +23,6 @@ const schema = new mongoose.Schema(
         ret.id = ret._id.toString();
         delete ret._id;
         delete ret.__v;
-        ret.permissions = ret.permissions.map((p: string) => p.toString());
       },
     },
   },

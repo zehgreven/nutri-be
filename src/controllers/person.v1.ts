@@ -111,7 +111,7 @@ export class PersonControllerV1 extends BaseController {
       }
 
       const result = await this.repository.findOne({
-        id: req.params.id,
+        _id: req.params.id,
       });
       res.status(StatusCodes.OK).send(result);
     } catch (error) {
