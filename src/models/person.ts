@@ -18,6 +18,7 @@ const schema = new mongoose.Schema(
     email: { type: String, required: true },
     birthDate: { type: Date },
     gender: { type: String },
+    active: { type: Boolean, default: false },
   },
   {
     toJSON: {

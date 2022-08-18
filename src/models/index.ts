@@ -1,2 +1,3 @@
-//eslint-disable-next-line
-export interface BaseModel {}
+export interface BaseModel {
+  active: boolean;
+}

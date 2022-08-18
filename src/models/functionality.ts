@@ -17,6 +17,7 @@ const schema = new mongoose.Schema(
     name: { type: String, required: true },
     description: { type: String },
     path: { type: String },
+    active: { type: Boolean, default: false },
     functionalityTypeId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'FunctionalityType',

@@ -13,6 +13,7 @@ export interface ExistingPermission extends Permission {
 const schema = new mongoose.Schema(
   {
     allow: { type: Boolean, required: true, default: true },
+    active: { type: Boolean, default: false },
     functionalityId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Functionality',

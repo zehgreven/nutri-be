@@ -21,6 +21,7 @@ export enum CustomValidation {
 
 const schema = new mongoose.Schema<User>(
   {
+    active: { type: Boolean, default: false },
     name: { type: String, required: true },
     email: {
       type: String,
