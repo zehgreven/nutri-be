@@ -47,6 +47,14 @@ export class FunctionalityRepository implements IFunctionalityRepository {
         orderBy: {
           created_at: 'desc',
         },
+        include: {
+          functionalityType: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
       });
 
       const count = await prismaClient.functionality.count({ where });
