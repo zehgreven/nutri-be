@@ -34,7 +34,7 @@ export class FunctionalityTypeRepository
       const where = {};
       Object.entries({ ...options }).map((val, _, __) => {
         if (typeof options[val[0]] === 'string') {
-          where[val[0]] = { contains: val[1] };
+          where[val[0]] = { contains: val[1], mode: 'insensitive' };
         } else if (typeof options[val[0]] === 'array') {
           where[val[0]] = { in: val[1] };
         } else {
