@@ -9,11 +9,12 @@ import {
 import logger from '@src/logger';
 import { authMiddleware } from '@src/middlewares/auth';
 import { rateLimiter } from '@src/middlewares/rate-limit';
-import { UserRepository } from '@src/repositories';
+import { UserRepository } from '@src/repositories/user.repository';
 import AuthService from '@src/services/auth.service';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
+import bcrypt from 'bcrypt';
 
 @Controller('user/v1')
 @ClassMiddleware(rateLimiter)
@@ -25,9 +26,12 @@ export class UserControllerV1 extends BaseController {
   @Post('')
   public async create(req: Request, res: Response): Promise<void> {
     try {
-      const newUser = await this.repository.create(req.body);
+      const data = req.body;
+      data.password = bcrypt.hashSync(data.password, 8);
+      const newUser = await this.repository.create(data);
       res.status(201).send(newUser);
     } catch (error) {
+      logger.error(error);
       this.sendCreateUpdateErrorResponse(res, error);
     }
   }
@@ -141,7 +145,7 @@ export class UserControllerV1 extends BaseController {
       }
 
       const result = await this.repository.findOne({
-        _id: req.params.id,
+        id: req.params.id,
       });
       res.status(StatusCodes.OK).send(result);
     } catch (error) {

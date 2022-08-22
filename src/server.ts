@@ -7,18 +7,18 @@ import expressPino from 'express-pino-logger';
 import { ClientControllerV1 } from './controllers/client.v1';
 import { FunctionalityTypeControllerV1 } from './controllers/functionality-type.v1';
 import { FunctionalityControllerV1 } from './controllers/functionality.v1';
-import { PermissionControllerV1 } from './controllers/permission.v1';
-import { PersonControllerV1 } from './controllers/person.v1';
 import { ProfileControllerV1 } from './controllers/profile.v1';
 import { UserControllerV1 } from './controllers/user.v1';
 import logger from './logger';
 import { apiERrorValidator } from './middlewares/api-error-validator';
-import { FunctionalityMongoDBRepository } from './repositories/functionality-mongdb-repository';
-import { FunctionalityTypeMongoDBRepository } from './repositories/functionality-type-mongdb-repository';
-import { PermissionMongoDBRepository } from './repositories/permission-mongdb-repository';
-import { PersonMongoDBRepository } from './repositories/person-mongdb-repository';
-import { ProfileMongoDBRepository } from './repositories/profile-mongdb-repository';
-import { UserMongoDBRepository } from './repositories/user-mongodb-repository';
+import { UserRepository } from './repositories/user.repository';
+import { FunctionalityTypeRepository } from './repositories/functionality-type.repository';
+import { FunctionalityRepository } from './repositories/functionality.repository';
+import { UserPermissionRepository } from './repositories/user-permission.repository';
+import { ProfileRepository } from './repositories/profile.repository';
+import { ProfilePermissionRepository } from './repositories/profile-permission.repository';
+import { ProfilePermissionControllerV1 } from './controllers/profile-permission.v1';
+import { UserPermissionControllerV1 } from './controllers/user-permission.v1';
 
 export class SetupServer extends Server {
   constructor(private port = 3000) {
@@ -56,34 +56,34 @@ export class SetupServer extends Server {
   }
 
   private setupControllers(): void {
-    const userControllerV1 = new UserControllerV1(new UserMongoDBRepository());
+    const userControllerV1 = new UserControllerV1(new UserRepository());
     const functionalityTypeControllerV1 = new FunctionalityTypeControllerV1(
-      new FunctionalityTypeMongoDBRepository(),
+      new FunctionalityTypeRepository(),
     );
     const functionalityControllerV1 = new FunctionalityControllerV1(
-      new FunctionalityMongoDBRepository(),
+      new FunctionalityRepository(),
     );
-    const permissionControllerV1 = new PermissionControllerV1(
-      new PermissionMongoDBRepository(),
+    const profilePermissionControllerV1 = new ProfilePermissionControllerV1(
+      new ProfilePermissionRepository(),
+    );
+    const userPermissionControllerV1 = new UserPermissionControllerV1(
+      new UserPermissionRepository(),
     );
     const profileControllerV1 = new ProfileControllerV1(
-      new ProfileMongoDBRepository(),
-    );
-    const personControllerV1 = new PersonControllerV1(
-      new PersonMongoDBRepository(),
+      new ProfileRepository(),
     );
     const clientControllerV1 = new ClientControllerV1(
-      new UserMongoDBRepository(),
-      new ProfileMongoDBRepository(),
+      new UserRepository(),
+      new ProfileRepository(),
     );
 
     this.addControllers([
       userControllerV1,
       functionalityTypeControllerV1,
       functionalityControllerV1,
-      permissionControllerV1,
+      profilePermissionControllerV1,
+      userPermissionControllerV1,
       profileControllerV1,
-      personControllerV1,
       clientControllerV1,
     ]);
   }

@@ -1,14 +1,12 @@
-import config, { IConfig } from 'config';
-import { connect as mongooseConnect, connection } from 'mongoose';
+import { PrismaClient } from '@prisma/client';
 
-const dbConfig: IConfig = config.get('database');
+const prismaClient = new PrismaClient({
+  log: ['error', 'info', 'query', 'warn'],
+});
 
-export const connect = async (): Promise<void> => {
-  const url = dbConfig.get('url');
-  const port = dbConfig.get('port');
-  const database = dbConfig.get('database');
+export const connect = async (): Promise<void> => await prismaClient.$connect();
 
-  await mongooseConnect(`mongodb://${url}:${port}/${database}`);
-};
+export const close = async (): Promise<void> =>
+  await prismaClient.$disconnect();
 
-export const close = (): Promise<void> => connection.close();
+export { prismaClient };

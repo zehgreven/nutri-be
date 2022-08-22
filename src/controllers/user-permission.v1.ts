@@ -2,16 +2,16 @@ import { ClassMiddleware, Controller, Get, Post, Put } from '@overnightjs/core';
 import logger from '@src/logger';
 import { authMiddleware } from '@src/middlewares/auth';
 import { rateLimiter } from '@src/middlewares/rate-limit';
-import { PermissionRepository } from '@src/repositories';
+import { UserPermissionRepository } from '@src/repositories/user-permission.repository';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
 
-@Controller('permission/v1')
+@Controller('user-permission/v1')
 @ClassMiddleware(authMiddleware)
 @ClassMiddleware(rateLimiter)
-export class PermissionControllerV1 extends BaseController {
-  constructor(private repository: PermissionRepository) {
+export class UserPermissionControllerV1 extends BaseController {
+  constructor(private repository: UserPermissionRepository) {
     super();
   }
 
@@ -77,7 +77,7 @@ export class PermissionControllerV1 extends BaseController {
       }
 
       const result = await this.repository.findAll(
-        req.query,
+        this.queryWithoutPagination(req),
         this.paginated(req),
       );
       res.status(StatusCodes.OK).send(result);
@@ -111,7 +111,7 @@ export class PermissionControllerV1 extends BaseController {
       }
 
       const result = await this.repository.findOne({
-        _id: req.params.id,
+        id: req.params.id,
       });
       res.status(StatusCodes.OK).send(result);
     } catch (error) {

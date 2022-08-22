@@ -1,15 +1,22 @@
-import { Functionality } from '@src/models/functionality';
-import { FunctionalityType } from '@src/models/functionality-type';
-import { Permission } from '@src/models/permission';
-import { Person } from '@src/models/person';
-import { Profile } from '@src/models/profile';
-import { User } from '@src/models/user';
-import { Paging } from './default-mongodb-repository';
+import {
+  Functionality,
+  FunctionalityType,
+  UserPermission,
+  ProfilePermission,
+  Profile,
+  User,
+  Prisma,
+} from '@prisma/client';
 
-export type WithId<T> = { id: string; _id?: string } & T;
+export type NoId<T> = Omit<T, 'id'>;
+
+export interface Paging {
+  page: number;
+  limit: number;
+}
 
 export type Paginated<T> = {
-  result: WithId<T>[];
+  result: T[];
   page: number;
   previousPage: number | undefined;
   nextPage: number | undefined;
@@ -18,26 +25,26 @@ export type Paginated<T> = {
   count: number;
 };
 
-export interface BaseRepository<T> {
-  create(data: T): Promise<WithId<T>>;
-  update(id: string, data: T): Promise<void>;
-  delete(id: string): Promise<void>;
-  findAll(options: Partial<WithId<T>>, paging: Paging): Promise<Paginated<T>>;
-  findOne(options: Partial<WithId<T>>): Promise<WithId<T> | undefined>;
-  deleteAll(): Promise<void>;
+export interface IBaseRepository<T> {
+  create(data: NoId<T>): Promise<T>;
+  update(id: string, data: T): Promise<T>;
+  delete(id: string): Promise<T>;
+  findAll(options: Partial<T>, paging: Paging): Promise<Paginated<T>>;
+  findOne(options: Partial<T>): Promise<T | null>;
+  deleteAll(): Promise<Prisma.BatchPayload>;
 }
 
-export type FunctionalityTypeRepository = BaseRepository<FunctionalityType>;
+export type IFunctionalityTypeRepository = IBaseRepository<FunctionalityType>;
 
-export type FunctionalityRepository = BaseRepository<Functionality>;
+export type IFunctionalityRepository = IBaseRepository<Functionality>;
 
-export type PermissionRepository = BaseRepository<Permission>;
+export type IUserPermissionRepository = IBaseRepository<UserPermission>;
 
-export type ProfileRepository = BaseRepository<Profile>;
+export type IProfilePermissionRepository = IBaseRepository<ProfilePermission>;
 
-export type PersonRepository = BaseRepository<Person>;
+export type IProfileRepository = IBaseRepository<Profile>;
 
-export interface UserRepository extends BaseRepository<User> {
-  findOneById(id: string): Promise<WithId<User> | undefined>;
-  findOneByEmail(email: string): Promise<WithId<User> | undefined>;
+export interface IUserRepository extends IBaseRepository<User> {
+  findOneById(id: string): Promise<User | null>;
+  findOneByEmail(email: string): Promise<User | null>;
 }

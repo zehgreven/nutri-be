@@ -2,7 +2,7 @@ import { ClassMiddleware, Controller, Get, Post, Put } from '@overnightjs/core';
 import logger from '@src/logger';
 import { authMiddleware } from '@src/middlewares/auth';
 import { rateLimiter } from '@src/middlewares/rate-limit';
-import { FunctionalityRepository } from '@src/repositories';
+import { FunctionalityRepository } from '@src/repositories/functionality.repository';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
@@ -77,7 +77,7 @@ export class FunctionalityControllerV1 extends BaseController {
       }
 
       const result = await this.repository.findAll(
-        req.query,
+        this.queryWithoutPagination(req),
         this.paginated(req),
       );
       res.status(StatusCodes.OK).send(result);
@@ -111,7 +111,7 @@ export class FunctionalityControllerV1 extends BaseController {
       }
 
       const result = await this.repository.findOne({
-        _id: req.params.id,
+        id: req.params.id,
       });
       res.status(StatusCodes.OK).send(result);
     } catch (error) {

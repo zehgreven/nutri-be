@@ -2,16 +2,16 @@ import { ClassMiddleware, Controller, Get, Post, Put } from '@overnightjs/core';
 import logger from '@src/logger';
 import { authMiddleware } from '@src/middlewares/auth';
 import { rateLimiter } from '@src/middlewares/rate-limit';
-import { PersonRepository } from '@src/repositories';
+import { ProfilePermissionRepository } from '@src/repositories/profile-permission.repository';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
 
-@Controller('person/v1')
+@Controller('profile-permission/v1')
 @ClassMiddleware(authMiddleware)
 @ClassMiddleware(rateLimiter)
-export class PersonControllerV1 extends BaseController {
-  constructor(private repository: PersonRepository) {
+export class ProfilePermissionControllerV1 extends BaseController {
+  constructor(private repository: ProfilePermissionRepository) {
     super();
   }
 
@@ -65,7 +65,7 @@ export class PersonControllerV1 extends BaseController {
   }
 
   @Get('')
-  public async getAll(req: Request, res: Response): Promise<void> {
+  public async findAll(req: Request, res: Response): Promise<void> {
     try {
       if (!req.context?.userId) {
         this.sendErrorResponse(res, {
@@ -77,7 +77,7 @@ export class PersonControllerV1 extends BaseController {
       }
 
       const result = await this.repository.findAll(
-        req.query,
+        this.queryWithoutPagination(req),
         this.paginated(req),
       );
       res.status(StatusCodes.OK).send(result);
@@ -111,7 +111,7 @@ export class PersonControllerV1 extends BaseController {
       }
 
       const result = await this.repository.findOne({
-        _id: req.params.id,
+        id: req.params.id,
       });
       res.status(StatusCodes.OK).send(result);
     } catch (error) {

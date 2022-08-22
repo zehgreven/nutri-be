@@ -9,7 +9,7 @@ import {
 import logger from '@src/logger';
 import { authMiddleware } from '@src/middlewares/auth';
 import { rateLimiter } from '@src/middlewares/rate-limit';
-import { FunctionalityTypeRepository } from '@src/repositories';
+import { FunctionalityTypeRepository } from '@src/repositories/functionality-type.repository';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
@@ -114,7 +114,7 @@ export class FunctionalityTypeControllerV1 extends BaseController {
       }
 
       const result = await this.repository.findAll(
-        req.query,
+        this.queryWithoutPagination(req),
         this.paginated(req),
       );
       res.status(StatusCodes.OK).send(result);
@@ -147,7 +147,7 @@ export class FunctionalityTypeControllerV1 extends BaseController {
         return;
       }
       const result = await this.repository.findOne({
-        _id: req.params.id,
+        id: req.params.id,
       });
       res.status(StatusCodes.OK).send(result);
     } catch (error) {

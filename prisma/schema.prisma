@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model FunctionalityType {
+  id     String  @id @default(uuid()) @db.Uuid
+  active Boolean @default(true)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
+
+  description String?
+  name        String
+
+  Functionality Functionality[]
+}
+
+model Functionality {
+  id     String  @id @default(uuid()) @db.Uuid
+  active Boolean @default(true)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
+
+  description String?
+  name        String
+  path        String?
+
+  functionalityTypeId String            @unique @db.Uuid
+  functionalityType   FunctionalityType @relation(fields: [functionalityTypeId], references: [id])
+
+  UserPermission UserPermission[]
+
+  ProfilePermission ProfilePermission[]
+}
+
+model UserPermission {
+  id     String  @id @default(uuid()) @db.Uuid
+  active Boolean @default(true)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
+
+  allow Boolean @default(false)
+
+  userId String @unique @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+
+  functionalityId String        @unique @db.Uuid
+  functionality   Functionality @relation(fields: [functionalityId], references: [id])
+}
+
+model ProfilePermission {
+  id     String  @id @default(uuid()) @db.Uuid
+  active Boolean @default(true)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
+
+  allow Boolean @default(false)
+
+  profileId String  @unique @db.Uuid
+  profile   Profile @relation(fields: [profileId], references: [id])
+
+  functionalityId String        @unique @db.Uuid
+  functionality   Functionality @relation(fields: [functionalityId], references: [id])
+}
+
+model Profile {
+  id     String  @id @default(uuid()) @db.Uuid
+  active Boolean @default(true)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
+
+  name        String
+  description String?
+
+  profilePermission ProfilePermission[]
+
+  users        User[]        @relation("UserProfile")
+  applications Application[] @relation("ApplicationProfile")
+}
+
+model Application {
+  id     String  @id @default(uuid()) @db.Uuid
+  active Boolean @default(true)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
+
+  name        String
+  description String?
+
+  profile Profile[] @relation("ApplicationProfile")
+  users   User[]    @relation("UserApplication")
+}
+
+model User {
+  id     String  @id @default(uuid()) @db.Uuid
+  active Boolean @default(true)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
+
+  email    String
+  name     String
+  password String
+
+  permissions UserPermission[]
+
+  profiles     Profile[]     @relation("UserProfile")
+  applications Application[] @relation("UserApplication")
+}

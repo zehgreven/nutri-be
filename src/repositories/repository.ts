@@ -1,5 +1,5 @@
-import { BaseRepository, Paginated, WithId } from '.';
-import { Paging } from './default-mongodb-repository';
+import { Prisma } from '@prisma/client';
+import { IBaseRepository, NoId, Paginated, Paging } from '.';
 
 export class DatabaseError extends Error {
   constructor(message: string) {
@@ -13,17 +13,14 @@ export class DatabaseUnknownClientError extends DatabaseError {}
 
 export class DatabaseInternalError extends DatabaseError {}
 
-export abstract class Repository<T> implements BaseRepository<T> {
-  public abstract create(data: T): Promise<WithId<T>>;
-
-  public abstract findOne(
-    options: Partial<WithId<T>>,
-  ): Promise<WithId<T> | undefined>;
-
+export abstract class Repository<T> implements IBaseRepository<T> {
+  public abstract create(data: NoId<T>): Promise<T>;
+  public abstract update(id: string, data: T): Promise<T>;
+  public abstract delete(id: string): Promise<T>;
   public abstract findAll(
-    filter: Partial<WithId<T>>,
+    options: Partial<T>,
     paging: Paging,
   ): Promise<Paginated<T>>;
-
-  public abstract deleteAll(): Promise<void>;
+  public abstract findOne(options: Partial<T>): Promise<T | null>;
+  public abstract deleteAll(): Promise<Prisma.BatchPayload>;
 }

@@ -77,7 +77,7 @@ export class ProfileControllerV1 extends BaseController {
       }
 
       const result = await this.repository.findAll(
-        req.query,
+        this.queryWithoutPagination(req),
         this.paginated(req),
       );
       res.status(StatusCodes.OK).send(result);
@@ -111,7 +111,7 @@ export class ProfileControllerV1 extends BaseController {
       }
 
       const result = await this.repository.findOne({
-        _id: req.params.id,
+        id: req.params.id,
       });
       res.status(StatusCodes.OK).send(result);
     } catch (error) {

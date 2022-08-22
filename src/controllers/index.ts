@@ -45,6 +45,13 @@ export abstract class BaseController {
     return res.status(apiError.code).send(ApiError.format(apiError));
   }
 
+  protected queryWithoutPagination(req: Request) {
+    const query = { ...req.query };
+    delete query.limit;
+    delete query.page;
+    return query;
+  }
+
   protected paginated(req: Request): Paging {
     const { page, limit } = req.query;
 
