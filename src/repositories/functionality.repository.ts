@@ -1,27 +1,14 @@
-import { Functionality, Prisma } from '@prisma/client';
+import { Functionality } from '@prisma/client';
 
 import { prismaClient } from '@src/database';
-import logger from '@src/logger';
 
-import { IFunctionalityRepository, NoId, Paginated, Paging } from '.';
-import { DatabaseInternalError } from './repository';
+import { IFunctionalityRepository, Paginated, Paging } from '.';
+import { BaseRepository } from './repository';
 
-export class FunctionalityRepository implements IFunctionalityRepository {
-  create(data: NoId<Functionality>): Promise<Functionality> {
-    return prismaClient.functionality.create({ data });
-  }
-
-  update(id: string, data: Functionality): Promise<Functionality> {
-    return prismaClient.functionality.update({
-      where: { id },
-      data,
-    });
-  }
-
-  delete(id: string): Promise<Functionality> {
-    return prismaClient.functionality.delete({ where: { id } });
-  }
-
+export class FunctionalityRepository
+  extends BaseRepository<Functionality>
+  implements IFunctionalityRepository
+{
   async findAll(
     options: Partial<Functionality>,
     paging: Paging,
@@ -75,32 +62,5 @@ export class FunctionalityRepository implements IFunctionalityRepository {
     } catch (error) {
       this.handleError(error);
     }
-  }
-
-  findOne(where: Partial<Functionality>): Promise<Functionality | null> {
-    return prismaClient.functionality.findFirst({ where });
-  }
-
-  deleteAll(): Promise<Prisma.BatchPayload> {
-    return prismaClient.functionality.deleteMany({});
-  }
-
-  protected handleError(error: unknown): never {
-    // if (error instanceof Error.ValidationError) {
-    //   const duplicatedKindErrors = Object.values(error.errors).filter(
-    //     err =>
-    //       err.name == 'ValidatorError' &&
-    //       err.kind == CustomValidation.DUPLICATED,
-    //   );
-
-    //   if (duplicatedKindErrors.length) {
-    //     throw new DatabaseValidationError(error.message);
-    //   }
-    //   throw new DatabaseUnknownClientError(error.message);
-    // }
-    logger.warn(`Database error ${error}`);
-    throw new DatabaseInternalError(
-      'Something unexpected happened to the database',
-    );
   }
 }
