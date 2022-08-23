@@ -2,7 +2,7 @@ import { ClassMiddleware, Controller, Get, Post, Put } from '@overnightjs/core';
 import logger from '@src/logger';
 import { authMiddleware } from '@src/middlewares/auth';
 import { rateLimiter } from '@src/middlewares/rate-limit';
-import { ProfileRepository } from '@src/repositories';
+import { ProfileRepository } from '@src/repositories/profile.repository';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
