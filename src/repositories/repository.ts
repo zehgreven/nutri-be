@@ -36,22 +36,29 @@ export class BaseRepository<T> extends AbstractRepository<T> {
     this.model = model;
   }
 
-  create(data: NoId<T>): Promise<T> {
+  public create(data: NoId<T>): Promise<T> {
     return this.model.create({ data });
   }
 
-  update(id: string, data: T): Promise<T> {
+  public update(id: string, data: T): Promise<T> {
     return this.model.update({
       where: { id },
       data,
     });
   }
 
-  delete(id: string): Promise<T> {
+  public delete(id: string): Promise<T> {
     return this.model.delete({ where: { id } });
   }
 
-  async findAll(options: Partial<T>, paging: Paging): Promise<Paginated<T>> {
+  protected getCustomFindAllProps(): any {
+    return {};
+  }
+
+  public async findAll(
+    options: Partial<T>,
+    paging: Paging,
+  ): Promise<Paginated<T>> {
     try {
       const { limit, page } = paging;
 
@@ -73,6 +80,7 @@ export class BaseRepository<T> extends AbstractRepository<T> {
         orderBy: {
           created_at: 'desc',
         },
+        ...this.getCustomFindAllProps(),
       });
 
       const count = await this.model.count({ where });
@@ -95,11 +103,11 @@ export class BaseRepository<T> extends AbstractRepository<T> {
     }
   }
 
-  findOne(where: Partial<T>): Promise<T | null> {
+  public findOne(where: Partial<T>): Promise<T | null> {
     return this.model.findFirst({ where });
   }
 
-  deleteAll(): Promise<Prisma.BatchPayload> {
+  public deleteAll(): Promise<Prisma.BatchPayload> {
     return this.model.deleteMany({});
   }
 
