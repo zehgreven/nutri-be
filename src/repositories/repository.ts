@@ -64,9 +64,9 @@ export class BaseRepository<T> extends AbstractRepository<T> {
 
       const where = {};
       Object.entries({ ...options }).map((val, _, __) => {
-        if (typeof options[val[0]] === 'string') {
+        if (typeof options[val[1]] === 'string') {
           where[val[0]] = { contains: val[1], mode: 'insensitive' };
-        } else if (typeof options[val[0]] === 'array') {
+        } else if (typeof options[val[1]] === 'array') {
           where[val[0]] = { in: val[1] };
         } else {
           where[val[0]] = val[1];

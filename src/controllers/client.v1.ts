@@ -1,6 +1,7 @@
 import { ClassMiddleware, Controller, Get } from '@overnightjs/core';
 import { rateLimiter } from '@src/middlewares/rate-limit';
-import { ProfileRepository, UserRepository } from '@src/repositories';
+import { ProfileRepository } from '@src/repositories/profile.repository';
+import { UserRepository } from '@src/repositories/user.repository';
 import { Request, Response } from 'express';
 import { BaseController } from '.';
 
@@ -36,7 +37,7 @@ export class ClientControllerV1 extends BaseController {
     }
 
     const user = await this.userRepository.findAll(
-      { ...req.query, profiles: [profile.id] },
+      this.queryWithoutPagination(req),
       this.paginated(req),
     );
 
