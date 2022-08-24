@@ -33,7 +33,7 @@ model Functionality {
   name        String
   path        String?
 
-  functionalityTypeId String            @unique @db.Uuid
+  functionalityTypeId String            @db.Uuid
   functionalityType   FunctionalityType @relation(fields: [functionalityTypeId], references: [id])
 
   UserPermission UserPermission[]
@@ -51,10 +51,10 @@ model UserPermission {
 
   allow Boolean @default(false)
 
-  userId String @unique @db.Uuid
+  userId String @db.Uuid
   user   User   @relation(fields: [userId], references: [id])
 
-  functionalityId String        @unique @db.Uuid
+  functionalityId String        @db.Uuid
   functionality   Functionality @relation(fields: [functionalityId], references: [id])
 }
 
@@ -68,10 +68,10 @@ model ProfilePermission {
 
   allow Boolean @default(false)
 
-  profileId String  @unique @db.Uuid
+  profileId String  @db.Uuid
   profile   Profile @relation(fields: [profileId], references: [id])
 
-  functionalityId String        @unique @db.Uuid
+  functionalityId String        @db.Uuid
   functionality   Functionality @relation(fields: [functionalityId], references: [id])
 }
 
