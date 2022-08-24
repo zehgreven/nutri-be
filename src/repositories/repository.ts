@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
-import { IBaseRepository, NoId, Paginated, Paging } from '.';
 import logger from '@src/logger';
+import { IBaseRepository, NoId, Paginated, Paging } from '.';
 
 export class DatabaseError extends Error {
   constructor(message: string) {
@@ -62,16 +62,7 @@ export class BaseRepository<T> extends AbstractRepository<T> {
     try {
       const { limit, page } = paging;
 
-      const where = {};
-      Object.entries({ ...options }).map((val, _, __) => {
-        if (typeof options[val[0]] === 'string') {
-          where[val[0]] = { contains: val[1], mode: 'insensitive' };
-        } else if (typeof options[val[0]] === 'array') {
-          where[val[0]] = { in: val[1] };
-        } else {
-          where[val[0]] = val[1];
-        }
-      });
+      const where = this.buildWhere(options);
 
       const result = await this.model.findMany({
         skip: limit * page,
@@ -101,6 +92,20 @@ export class BaseRepository<T> extends AbstractRepository<T> {
     } catch (error) {
       this.handleError(error);
     }
+  }
+
+  protected buildWhere(options: Partial<T>) {
+    const where = {};
+    Object.entries({ ...options }).map((val, _, __) => {
+      if (typeof options[val[0]] === 'string') {
+        where[val[0]] = { contains: val[1], mode: 'insensitive' };
+      } else if (typeof options[val[0]] === 'array') {
+        where[val[0]] = { in: val[1] };
+      } else {
+        where[val[0]] = val[1];
+      }
+    });
+    return where;
   }
 
   public findOne(where: Partial<T>): Promise<T | null> {
