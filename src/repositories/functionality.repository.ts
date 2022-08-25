@@ -51,6 +51,7 @@ export class FunctionalityRepository
           },
           ProfilePermission: {
             select: {
+              id: true,
               allow: true,
             },
             where: {
