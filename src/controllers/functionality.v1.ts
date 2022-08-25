@@ -138,7 +138,7 @@ export class FunctionalityControllerV1 extends BaseController {
       }
 
       const result = await this.repository.findFunctionalitiesByProfile(
-        req.params?.id,
+        req.params?.profileId,
         this.queryWithoutPagination(req),
         this.paginated(req),
       );

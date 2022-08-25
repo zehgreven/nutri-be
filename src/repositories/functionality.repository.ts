@@ -33,7 +33,6 @@ export class FunctionalityRepository
   ): Promise<Paginated<Functionality>> {
     try {
       const { limit, page } = paging;
-
       const where = this.buildWhere(options);
 
       const result = await prismaClient.functionality.findMany({
@@ -51,8 +50,12 @@ export class FunctionalityRepository
             },
           },
           ProfilePermission: {
+            select: {
+              allow: true,
+            },
             where: {
-              id: profileId,
+              profileId,
+              active: true,
             },
           },
         },
