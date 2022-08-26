@@ -41,11 +41,14 @@ export type IFunctionalityRepository = IBaseRepository<Functionality>;
 
 export type IUserPermissionRepository = IBaseRepository<UserPermission>;
 
-export type IProfilePermissionRepository = IBaseRepository<ProfilePermission>;
-
 export type IProfileRepository = IBaseRepository<Profile>;
 
 export interface IUserRepository extends IBaseRepository<User> {
   findOneById(id: string): Promise<User | null>;
   findOneByEmail(email: string): Promise<User | null>;
+}
+
+export interface IProfilePermissionRepository
+  extends IBaseRepository<ProfilePermission> {
+  updateMany(data: ProfilePermission[]): Promise<void | null>;
 }

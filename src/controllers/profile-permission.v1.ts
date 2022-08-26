@@ -121,4 +121,26 @@ export class ProfilePermissionControllerV1 extends BaseController {
       });
     }
   }
+
+  @Post('batch')
+  public async updateManyOrCreateMany(
+    req: Request,
+    res: Response,
+  ): Promise<void> {
+    try {
+      if (!req.context?.userId) {
+        this.sendErrorResponse(res, {
+          code: StatusCodes.INTERNAL_SERVER_ERROR,
+          message: 'Something went wrong',
+        });
+        logger.error('Missing userId');
+        return;
+      }
+
+      await this.repository.updateManyOrCreateMany(req.body);
+      res.status(StatusCodes.NO_CONTENT).send();
+    } catch (error) {
+      this.sendCreateUpdateErrorResponse(res, error);
+    }
+  }
 }
