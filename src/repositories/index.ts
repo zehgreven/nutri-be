@@ -29,7 +29,7 @@ export type Paginated<T> = {
 export interface IBaseRepository<T> {
   create(data: NoId<T>): Promise<T>;
   update(id: string, data: T): Promise<T>;
-  delete(id: string): Promise<T>;
+  delete(id: string): T;
   findAll(options: Partial<T>, paging: Paging): Promise<Paginated<T>>;
   findOne(options: Partial<T>): Promise<T | null>;
   deleteAll(): Promise<Prisma.BatchPayload>;

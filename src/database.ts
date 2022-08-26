@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prismaClient = new PrismaClient({
   log: ['error', 'info', 'query', 'warn'],
+  errorFormat: 'minimal',
 });
 
 export const connect = async (): Promise<void> => await prismaClient.$connect();

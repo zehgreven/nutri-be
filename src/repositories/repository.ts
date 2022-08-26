@@ -17,7 +17,7 @@ export class DatabaseInternalError extends DatabaseError {}
 export abstract class AbstractRepository<T> implements IBaseRepository<T> {
   public abstract create(data: NoId<T>): Promise<T>;
   public abstract update(id: string, data: T): Promise<T>;
-  public abstract delete(id: string): Promise<T>;
+  public abstract delete(id: string): T;
   public abstract findAll(
     options: Partial<T>,
     paging: Paging,
@@ -47,8 +47,12 @@ export class BaseRepository<T> extends AbstractRepository<T> {
     });
   }
 
-  public delete(id: string): Promise<T> {
-    return this.model.delete({ where: { id } });
+  public async delete(id: string): T {
+    try {
+      await this.model.delete({ where: { id } });
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   protected getCustomFindAllProps(): any {
@@ -117,21 +121,66 @@ export class BaseRepository<T> extends AbstractRepository<T> {
   }
 
   protected handleError(error: unknown): never {
-    // if (error instanceof Error.ValidationError) {
-    //   const duplicatedKindErrors = Object.values(error.errors).filter(
-    //     err =>
-    //       err.name == 'ValidatorError' &&
-    //       err.kind == CustomValidation.DUPLICATED,
-    //   );
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      const message = this.formatDatabaseError(error.code);
 
-    //   if (duplicatedKindErrors.length) {
-    //     throw new DatabaseValidationError(error.message);
-    //   }
-    //   throw new DatabaseUnknownClientError(error.message);
-    // }
+      if (this.isDatabaseValidationError(error.code)) {
+        throw new DatabaseValidationError(message);
+      }
+      throw new DatabaseUnknownClientError(message);
+    }
     logger.warn(`Database error ${error}`);
     throw new DatabaseInternalError(
       'Something unexpected happened to the database',
     );
+  }
+
+  private isDatabaseValidationError(code: string): boolean {
+    return [
+      'P2000',
+      'P2002',
+      'P2003',
+      'P2004',
+      'P2007',
+      'P2011',
+      'P2012',
+      'P2020',
+      'P2033',
+    ].includes(code);
+  }
+
+  private formatDatabaseError(code: string): string {
+    switch (code) {
+      case 'P2000':
+        return "The provided value for the column is too long for the column's type";
+      case 'P2002':
+        return 'Unique constraint failed';
+      case 'P2003':
+        return 'Foreign key constraint failed';
+      case 'P2004':
+        return 'A constraint failed on the database';
+      case 'P2007':
+        return 'Data validation error';
+      case 'P2011':
+        return 'Null constraint violation';
+      case 'P2012':
+        return 'Missing a required value';
+      case 'P2015':
+        return 'A related record could not be found.';
+      case 'P2018':
+        return 'The required connected records were not found.';
+      case 'P2019':
+        return 'Input error.';
+      case 'P2020':
+        return 'Value out of range for the type.';
+      case 'P2023':
+        return 'Inconsistent column data';
+      case 'P2025':
+        return 'An operation failed because it depends on one or more records that were required but not found';
+      case 'P2033':
+        return 'A number used in the query does not fit into a 64 bit signed integer.';
+      default:
+        return 'Something unexpected happened to the database';
+    }
   }
 }

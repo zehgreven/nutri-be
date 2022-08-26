@@ -1,4 +1,12 @@
-import { ClassMiddleware, Controller, Get, Post, Put } from '@overnightjs/core';
+import {
+  ClassMiddleware,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+} from '@overnightjs/core';
+import { Prisma } from '@prisma/client';
 import logger from '@src/logger';
 import { authMiddleware } from '@src/middlewares/auth';
 import { rateLimiter } from '@src/middlewares/rate-limit';
@@ -119,6 +127,36 @@ export class ProfileControllerV1 extends BaseController {
         code: StatusCodes.INTERNAL_SERVER_ERROR,
         message: 'Something went wrong',
       });
+    }
+  }
+
+  @Delete(':id')
+  public async delete(req: Request, res: Response): Promise<void> {
+    try {
+      if (!req.context?.userId) {
+        this.sendErrorResponse(res, {
+          code: StatusCodes.INTERNAL_SERVER_ERROR,
+          message: 'Something went wrong',
+        });
+        logger.error('Missing userId');
+        return;
+      }
+
+      const requestParamId = req.params?.id;
+
+      if (!requestParamId) {
+        this.sendErrorResponse(res, {
+          code: StatusCodes.INTERNAL_SERVER_ERROR,
+          message: 'Something went wrong',
+        });
+        logger.error('Missing parameter id');
+        return;
+      }
+
+      await this.repository.delete(requestParamId);
+      res.status(StatusCodes.NO_CONTENT).send();
+    } catch (error) {
+      this.sendCreateUpdateErrorResponse(res, error);
     }
   }
 }
