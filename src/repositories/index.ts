@@ -6,6 +6,7 @@ import {
   Profile,
   User,
   Prisma,
+  UserProfile,
 } from 'prisma/generated/client';
 
 export type NoId<T> = Omit<T, 'id'>;
@@ -59,5 +60,5 @@ export interface IUserPermissionRepository
 }
 
 export interface IUserProfileRepository extends IBaseRepository<UserProfile> {
-  updateManyOrCreateMany(permissions: UserPermission[]): Promise<void | null>;
+  updateManyOrCreateMany(data: UserProfile[]): Promise<void | null>;
 }
