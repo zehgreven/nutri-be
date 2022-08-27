@@ -11,4 +11,28 @@ export class UserPermissionRepository
   constructor() {
     super(prismaClient.userPermission);
   }
+
+  async updateManyOrCreateMany(
+    permissions: UserPermission[],
+  ): Promise<void | null> {
+    permissions.forEach(async data => {
+      const found = await prismaClient.userPermission.findFirst({
+        select: {
+          id: true,
+        },
+        where: {
+          functionalityId: data.functionalityId,
+          userId: data.userId,
+        },
+      });
+      if (found?.id) {
+        await prismaClient.userPermission.update({
+          data,
+          where: { id: found.id },
+        });
+      } else {
+        await prismaClient.userPermission.create({ data });
+      }
+    });
+  }
 }

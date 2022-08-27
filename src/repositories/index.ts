@@ -39,8 +39,6 @@ export type IFunctionalityTypeRepository = IBaseRepository<FunctionalityType>;
 
 export type IFunctionalityRepository = IBaseRepository<Functionality>;
 
-export type IUserPermissionRepository = IBaseRepository<UserPermission>;
-
 export type IProfileRepository = IBaseRepository<Profile>;
 
 export interface IUserRepository extends IBaseRepository<User> {
@@ -50,5 +48,12 @@ export interface IUserRepository extends IBaseRepository<User> {
 
 export interface IProfilePermissionRepository
   extends IBaseRepository<ProfilePermission> {
-  updateMany(data: ProfilePermission[]): Promise<void | null>;
+  updateManyOrCreateMany(
+    permissions: ProfilePermission[],
+  ): Promise<void | null>;
+}
+
+export interface IUserPermissionRepository
+  extends IBaseRepository<UserPermission> {
+  updateManyOrCreateMany(permissions: UserPermission[]): Promise<void | null>;
 }

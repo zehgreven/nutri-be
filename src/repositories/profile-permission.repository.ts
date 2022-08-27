@@ -27,14 +27,12 @@ export class ProfilePermissionRepository
         },
       });
       if (found?.id) {
-        const updated = await prismaClient.profilePermission.update({
+        await prismaClient.profilePermission.update({
           data,
           where: { id: found.id },
         });
-        logger.error('updated >> ' + updated);
       } else {
-        const created = await prismaClient.profilePermission.create({ data });
-        logger.error('created >> ' + created);
+        await prismaClient.profilePermission.create({ data });
       }
     });
   }
