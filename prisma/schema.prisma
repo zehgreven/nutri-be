@@ -87,10 +87,9 @@ model Profile {
   name        String
   description String?
 
-  permissions ProfilePermission[]
-
-  users        User[]        @relation("UserProfile")
-  applications Application[] @relation("ApplicationProfile")
+  permissions  ProfilePermission[]
+  users        UserProfile[]
+  applications Application[]       @relation("ApplicationProfile")
 }
 
 model Application {
@@ -121,6 +120,21 @@ model User {
 
   permissions UserPermission[]
 
-  profiles     Profile[]     @relation("UserProfile")
+  profiles     UserProfile[]
   applications Application[] @relation("UserApplication")
+}
+
+model UserProfile {
+  id     String  @id @default(uuid()) @db.Uuid
+  active Boolean @default(true)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
+
+  profileId String  @db.Uuid
+  profile   Profile @relation(fields: [profileId], references: [id])
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
 }
