@@ -123,8 +123,14 @@ export class UserControllerV1 extends BaseController {
         message: 'User not found!',
       });
     }
+
+    const permissions = await this.repository.findAllPermissionsFromLoggedUser(
+      userId,
+    );
+
     return res.send({
       user: { ...JSON.parse(JSON.stringify(user)), password: undefined },
+      permissions,
     });
   }
 

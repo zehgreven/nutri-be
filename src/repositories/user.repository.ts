@@ -25,4 +25,62 @@ export class UserRepository
       where: { username },
     });
   }
+
+  async findAllPermissionsFromLoggedUser(
+    userId: string,
+  ): Promise<(UserPermission | ProfilePermission)[]> {
+    const permissions: (UserPermission | ProfilePermission)[] = [];
+
+    const user = await prismaClient.user.findFirst({
+      where: { id: userId },
+      include: {
+        profiles: true,
+        permissions: {
+          where: { allow: true },
+          include: {
+            functionality: {
+              select: {
+                id: true,
+                name: true,
+                path: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      return [];
+    }
+
+    permissions.push(...user.permissions);
+
+    if (user.profiles.length) {
+      user.profiles.forEach(async profile => {
+        const data = await prismaClient.profile.findFirst({
+          where: { id: profile.id },
+          include: {
+            permissions: {
+              where: { allow: true },
+              include: {
+                functionality: {
+                  select: {
+                    id: true,
+                    name: true,
+                    path: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (data) {
+          permissions.push(...data.permissions);
+        }
+      });
+    }
+
+    return permissions;
+  }
 }
