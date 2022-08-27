@@ -40,6 +40,10 @@ model Functionality {
   userPermissions UserPermission[]
 
   profilePermissions ProfilePermission[]
+
+  masterId String?         @db.Uuid
+  master   Functionality?  @relation("FunctionalityMaster", fields: [masterId], references: [id])
+  children Functionality[] @relation("FunctionalityMaster")
 }
 
 model UserPermission {
