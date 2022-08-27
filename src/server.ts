@@ -19,6 +19,8 @@ import { ProfileRepository } from './repositories/profile.repository';
 import { ProfilePermissionRepository } from './repositories/profile-permission.repository';
 import { ProfilePermissionControllerV1 } from './controllers/profile-permission.v1';
 import { UserPermissionControllerV1 } from './controllers/user-permission.v1';
+import { UserProfileControllerV1 } from './controllers/user-profile.v1';
+import { UserProfileRepository } from './repositories/user-profile.repository';
 
 export class SetupServer extends Server {
   constructor(private port = 3000) {
@@ -76,6 +78,9 @@ export class SetupServer extends Server {
       new UserRepository(),
       new ProfileRepository(),
     );
+    const userProfileControllerV1 = new UserProfileControllerV1(
+      new UserProfileRepository(),
+    );
 
     this.addControllers([
       userControllerV1,
@@ -85,6 +90,7 @@ export class SetupServer extends Server {
       userPermissionControllerV1,
       profileControllerV1,
       clientControllerV1,
+      userProfileControllerV1,
     ]);
   }
 
