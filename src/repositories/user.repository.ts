@@ -29,12 +29,19 @@ export class UserRepository
   async findAllPermissionsFromLoggedUser(
     userId: string,
   ): Promise<(UserPermission | ProfilePermission)[]> {
-    const permissions: (UserPermission | ProfilePermission)[] = [];
+    const permissions = [];
 
     const user = await prismaClient.user.findFirst({
       where: { id: userId },
       include: {
-        profiles: true,
+        profiles: {
+          include: {
+            profile: true,
+          },
+          where: {
+            active: true,
+          },
+        },
         permissions: {
           where: { allow: true },
           include: {
@@ -57,7 +64,8 @@ export class UserRepository
     permissions.push(...user.permissions);
 
     if (user.profiles.length) {
-      user.profiles.forEach(async profile => {
+      for (const userProfile of user.profiles) {
+        const { profile } = userProfile;
         const data = await prismaClient.profile.findFirst({
           where: { id: profile.id },
           include: {
@@ -78,7 +86,7 @@ export class UserRepository
         if (data) {
           permissions.push(...data.permissions);
         }
-      });
+      }
     }
 
     return permissions;
