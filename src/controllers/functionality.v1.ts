@@ -187,4 +187,33 @@ export class FunctionalityControllerV1 extends BaseController {
       });
     }
   }
+
+  @Get('user/:userId')
+  public async findFunctionalitiesByUser(
+    req: Request,
+    res: Response,
+  ): Promise<void> {
+    try {
+      if (!req.context?.userId) {
+        this.sendErrorResponse(res, {
+          code: StatusCodes.INTERNAL_SERVER_ERROR,
+          message: 'Something went wrong',
+        });
+        logger.error('Missing userId');
+        return;
+      }
+
+      const result = await this.repository.findFunctionalitiesByUser(
+        req.params?.userId,
+        this.queryWithoutPagination(req),
+        this.paginated(req),
+      );
+      res.status(StatusCodes.OK).send(result);
+    } catch (error) {
+      this.sendErrorResponse(res, {
+        code: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Something went wrong',
+      });
+    }
+  }
 }
