@@ -124,14 +124,7 @@ export class UserControllerV1 extends BaseController {
       });
     }
 
-    const permissions = await this.repository.findAllPermissionsFromLoggedUser(
-      userId,
-    );
-
-    return res.send({
-      user: { ...JSON.parse(JSON.stringify(user)), password: undefined },
-      permissions,
-    });
+    return res.send({ ...user, password: undefined });
   }
 
   @Get(':id')
