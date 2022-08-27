@@ -74,7 +74,7 @@ export class UserControllerV1 extends BaseController {
   ): Promise<Response | void> {
     const { email, password } = req.body;
 
-    const user = await this.repository.findOneByEmail(email);
+    const user = await this.repository.findOneByUsername(email);
 
     if (!user) {
       return this.sendErrorResponse(res, {

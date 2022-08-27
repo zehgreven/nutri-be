@@ -19,9 +19,9 @@ export class UserRepository
     });
   }
 
-  findOneByEmail(email: string): Promise<User | null> {
+  findOneByUsername(username: string): Promise<User | null> {
     return prismaClient.user.findFirst({
-      where: { email },
+      where: { username },
     });
   }
 }

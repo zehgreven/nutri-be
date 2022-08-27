@@ -115,8 +115,7 @@ model User {
   updated_at DateTime?
   deleted_at DateTime?
 
-  email    String
-  name     String
+  username String
   password String
 
   permissions UserPermission[]

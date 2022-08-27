@@ -45,7 +45,7 @@ export type IProfileRepository = IBaseRepository<Profile>;
 
 export interface IUserRepository extends IBaseRepository<User> {
   findOneById(id: string): Promise<User | null>;
-  findOneByEmail(email: string): Promise<User | null>;
+  findOneByUsername(username: string): Promise<User | null>;
 }
 
 export interface IProfilePermissionRepository
