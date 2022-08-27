@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../prisma/generated/client"
 }
 
 datasource db {
@@ -86,7 +87,7 @@ model Profile {
   name        String
   description String?
 
-  profilePermission ProfilePermission[]
+  permissions ProfilePermission[]
 
   users        User[]        @relation("UserProfile")
   applications Application[] @relation("ApplicationProfile")
