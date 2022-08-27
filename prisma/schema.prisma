@@ -18,7 +18,7 @@ model FunctionalityType {
   description String?
   name        String
 
-  Functionality Functionality[]
+  functionalities Functionality[]
 }
 
 model Functionality {
@@ -36,9 +36,9 @@ model Functionality {
   functionalityTypeId String            @db.Uuid
   functionalityType   FunctionalityType @relation(fields: [functionalityTypeId], references: [id])
 
-  UserPermission UserPermission[]
+  userPermissions UserPermission[]
 
-  ProfilePermission ProfilePermission[]
+  profilePermissions ProfilePermission[]
 }
 
 model UserPermission {

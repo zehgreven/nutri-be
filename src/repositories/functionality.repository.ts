@@ -49,7 +49,7 @@ export class FunctionalityRepository
               name: true,
             },
           },
-          ProfilePermission: {
+          profilePermissions: {
             select: {
               id: true,
               allow: true,
