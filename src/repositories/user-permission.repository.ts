@@ -35,4 +35,29 @@ export class UserPermissionRepository
       }
     });
   }
+
+  findAllByUser(userId: string): Promise<Partial<UserPermission>[]> {
+    return prismaClient.userPermission.findMany({
+      select: {
+        id: true,
+        active: true,
+        allow: true,
+        functionality: {
+          select: {
+            id: true,
+            name: true,
+            path: true,
+          },
+        },
+      },
+      where: {
+        userId,
+        active: true,
+        allow: true,
+        functionality: {
+          active: true,
+        },
+      },
+    });
+  }
 }
