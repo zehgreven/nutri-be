@@ -1,6 +1,7 @@
-import { User } from '@prisma/client';
+import { User } from 'prisma/generated/client';
 
 import { prismaClient } from '@src/database';
+import { ProfilePermission, UserPermission } from 'prisma/generated/client';
 
 import { IUserRepository } from '.';
 import { BaseRepository } from './repository';

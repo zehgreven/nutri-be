@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from 'prisma/generated/client';
 import logger from '@src/logger';
 import { IBaseRepository, NoId, Paginated, Paging } from '.';
 

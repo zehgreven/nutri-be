@@ -1,7 +1,7 @@
-import { Profile } from '@prisma/client';
 import { prismaClient } from '@src/database';
+import { Profile } from 'prisma/generated/client';
 
-import { IProfileRepository } from '.';
+import { IProfileRepository, Paginated, Paging } from '.';
 import { BaseRepository } from './repository';
 
 export class ProfileRepository

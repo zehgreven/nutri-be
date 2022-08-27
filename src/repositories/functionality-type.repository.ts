@@ -1,4 +1,4 @@
-import { FunctionalityType } from '@prisma/client';
+import { FunctionalityType } from 'prisma/generated/client';
 import { prismaClient } from '@src/database';
 
 import { IFunctionalityTypeRepository } from '.';

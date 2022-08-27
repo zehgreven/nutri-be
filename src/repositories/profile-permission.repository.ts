@@ -1,6 +1,6 @@
-import { ProfilePermission } from '@prisma/client';
+import { ProfilePermission } from 'prisma/generated/client';
 import { prismaClient } from '@src/database';
-import logger from '@src/logger';
+import { UserPermission } from 'prisma/generated/client';
 
 import { IProfilePermissionRepository } from '.';
 import { BaseRepository } from './repository';
