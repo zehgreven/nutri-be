@@ -7,7 +7,7 @@ import {
   User,
   Prisma,
   UserProfile,
-} from 'prisma/generated/client';
+} from '@src/generated/client';
 
 export type NoId<T> = Omit<T, 'id'>;
 export type WithId<T> = T & { id: string };

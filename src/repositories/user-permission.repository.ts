@@ -1,4 +1,4 @@
-import { UserPermission } from 'prisma/generated/client';
+import { UserPermission } from '@src/generated/client';
 import { prismaClient } from '@src/database';
 
 import { IUserPermissionRepository } from '.';

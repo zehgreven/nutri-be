@@ -1,5 +1,5 @@
 import { prismaClient } from '@src/database';
-import { Profile } from 'prisma/generated/client';
+import { Profile } from '@src/generated/client';
 
 import { IProfileRepository, Paginated, Paging } from '.';
 import { BaseRepository } from './repository';

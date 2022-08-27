@@ -1,5 +1,5 @@
 import { prismaClient } from '@src/database';
-import { UserProfile } from 'prisma/generated/client';
+import { UserProfile } from '@src/generated/client';
 import { IUserProfileRepository } from '.';
 
 import { BaseRepository } from './repository';

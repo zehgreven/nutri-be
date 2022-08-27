@@ -1,4 +1,4 @@
-import { Functionality } from 'prisma/generated/client';
+import { Functionality } from '@src/generated/client';
 
 import { prismaClient } from '@src/database';
 
