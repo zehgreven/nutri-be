@@ -24,7 +24,25 @@ export class ProfileRepository
       const result = await prismaClient.profile.findMany({
         skip: limit * page,
         take: limit,
-
+        where: {
+          users: {
+            every: {
+              userId,
+            },
+          },
+        },
+        include: {
+          users: {
+            select: {
+              userId: true,
+              profileId: true,
+              active: true,
+            },
+            where: {
+              userId,
+            },
+          },
+        },
         orderBy: {
           created_at: 'desc',
         },
