@@ -155,4 +155,30 @@ export class UserControllerV1 extends BaseController {
       });
     }
   }
+
+  @Get('')
+  @Middleware(authMiddleware)
+  public async findAll(req: Request, res: Response): Promise<void> {
+    try {
+      if (!req.context?.userId) {
+        this.sendErrorResponse(res, {
+          code: StatusCodes.INTERNAL_SERVER_ERROR,
+          message: 'Something went wrong',
+        });
+        logger.error('Missing userId');
+        return;
+      }
+
+      const result = await this.repository.findAll(
+        this.queryWithoutPagination(req),
+        this.paginated(req),
+      );
+      res.status(StatusCodes.OK).send(result);
+    } catch (error) {
+      this.sendErrorResponse(res, {
+        code: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Something went wrong',
+      });
+    }
+  }
 }

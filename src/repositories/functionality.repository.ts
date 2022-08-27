@@ -105,7 +105,7 @@ export class FunctionalityRepository
               name: true,
             },
           },
-          profilePermissions: {
+          userPermissions: {
             select: {
               id: true,
               allow: true,

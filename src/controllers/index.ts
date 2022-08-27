@@ -3,6 +3,7 @@ import logger from '@src/logger';
 import { Paging } from '@src/repositories/default-mongodb-repository';
 import {
   DatabaseError,
+  DatabaseInternalError,
   DatabaseUnknownClientError,
   DatabaseValidationError,
 } from '@src/repositories/repository';
@@ -15,6 +16,7 @@ export abstract class BaseController {
     error: unknown,
   ): Response {
     if (
+      error instanceof DatabaseInternalError ||
       error instanceof DatabaseValidationError ||
       error instanceof DatabaseUnknownClientError
     ) {

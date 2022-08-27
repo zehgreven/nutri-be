@@ -17,7 +17,7 @@ export class DatabaseInternalError extends DatabaseError {}
 export abstract class AbstractRepository<T> implements IBaseRepository<T> {
   public abstract create(data: NoId<T>): Promise<T>;
   public abstract update(id: string, data: T): Promise<T>;
-  public abstract delete(id: string): T;
+  public abstract delete(id: string): Promise<T>;
   public abstract findAll(
     options: Partial<T>,
     paging: Paging,
@@ -36,20 +36,28 @@ export class BaseRepository<T> extends AbstractRepository<T> {
     this.model = model;
   }
 
-  public create(data: NoId<T>): Promise<T> {
-    return this.model.create({ data });
-  }
-
-  public update(id: string, data: T): Promise<T> {
-    return this.model.update({
-      where: { id },
-      data,
-    });
-  }
-
-  public async delete(id: string): T {
+  public async create(data: NoId<T>): Promise<T> {
     try {
-      await this.model.delete({ where: { id } });
+      return await this.model.create({ data });
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  public async update(id: string, data: T): Promise<T> {
+    try {
+      return await this.model.update({
+        where: { id },
+        data,
+      });
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  public async delete(id: string): Promise<T> {
+    try {
+      return await this.model.delete({ where: { id } });
     } catch (error) {
       this.handleError(error);
     }
@@ -129,7 +137,7 @@ export class BaseRepository<T> extends AbstractRepository<T> {
       }
       throw new DatabaseUnknownClientError(message);
     }
-    logger.warn(`Database error ${error}`);
+    logger.warn(`Database ${error}`);
     throw new DatabaseInternalError(
       'Something unexpected happened to the database',
     );
