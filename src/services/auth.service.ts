@@ -41,12 +41,12 @@ export default class AuthService {
     };
   }
 
-  public static refreshToken(token: string): AppToken {
+  public static async refreshToken(token: string): Promise<AppToken | Error> {
     if (!token) {
       throw new Error('Token is empty');
     }
 
-    const decoded = this.decodeToken(token);
+    const decoded = await this.decodeToken(token);
 
     if (!decoded?.sub) {
       throw new Error('Token is invalid');
