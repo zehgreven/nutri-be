@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import config from 'config';
+import logger from '@src/logger';
 
 export interface JwtToken {
   sub: string;
@@ -38,6 +39,20 @@ export default class AuthService {
         ),
       }),
     };
+  }
+
+  public static refreshToken(token: string): AppToken {
+    if (!token) {
+      throw new Error('Token is empty');
+    }
+
+    const decoded = this.decodeToken(token);
+
+    if (!decoded?.sub) {
+      throw new Error('Token is invalid');
+    }
+
+    return this.generateToken(decoded.sub);
   }
 
   public static decodeToken(token: string): JwtToken {

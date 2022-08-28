@@ -1,4 +1,11 @@
-import { ClassMiddleware, Controller, Post } from '@overnightjs/core';
+import {
+  ClassMiddleware,
+  Controller,
+  Middleware,
+  Post,
+} from '@overnightjs/core';
+import logger from '@src/logger';
+import { authMiddleware } from '@src/middlewares/auth';
 import { rateLimiter } from '@src/middlewares/rate-limit';
 import { UserRepository } from '@src/repositories/user.repository';
 import AuthService from '@src/services/auth.service';
@@ -45,6 +52,14 @@ export class AuthControllerV1 extends BaseController {
 
     const token = AuthService.generateToken(user.id);
 
+    return res.status(StatusCodes.OK).send(token);
+  }
+
+  @Post('refresh')
+  @Middleware(authMiddleware)
+  public async refresh(req: Request, res: Response) {
+    const refreshToken = req.body['refresh-token'];
+    const token = AuthService.refreshToken(refreshToken);
     return res.status(StatusCodes.OK).send(token);
   }
 }
