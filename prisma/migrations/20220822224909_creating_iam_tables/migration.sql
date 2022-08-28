@@ -21,6 +21,7 @@ CREATE TABLE "Functionality" (
     "description" TEXT,
     "name" TEXT NOT NULL,
     "path" TEXT,
+    "icon" TEXT,
     "functionalityTypeId" UUID NOT NULL,
 
     CONSTRAINT "Functionality_pkey" PRIMARY KEY ("id")

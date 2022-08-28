@@ -33,6 +33,7 @@ model Functionality {
   description String?
   name        String
   path        String?
+  icon        String?
 
   functionalityTypeId String            @db.Uuid
   functionalityType   FunctionalityType @relation(fields: [functionalityTypeId], references: [id])
