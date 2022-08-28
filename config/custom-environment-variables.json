@@ -1,13 +1,9 @@
 {
   "port": "APP_PORT",
-  "database": {
-    "url": "MONGODB_URL",
-    "port": "MONGODB_PORT",
-    "database": "MONGODB_DATABASE"
-  },
   "auth": {
     "key": "JWT_SECRET_KEY",
-    "tokenExpiresIn": "JWT_TOKEN_EXPIRES_IN"
+    "tokenExpiresIn": "JWT_TOKEN_EXPIRES_IN",
+    "refreshTokenExpiresIn": "JWT_REFRESH_TOKEN_EXPIRES_IN"
   },
   "logger": {
     "level": "LOGGER_LEVEL"

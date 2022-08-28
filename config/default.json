@@ -1,13 +1,9 @@
 {
   "port": 3333,
-  "database": {
-    "url": "localhost",
-    "port": 27017,
-    "database": "nutri"
-  },
   "auth": {
     "key": "some-key",
-    "tokenExpiresIn": 10000
+    "tokenExpiresIn": 10000,
+    "refreshTokenExpiresIn": 20000
   },
   "logger": {
     "enabled": true,
