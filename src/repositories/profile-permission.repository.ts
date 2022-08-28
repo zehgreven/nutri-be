@@ -86,6 +86,11 @@ export class ProfilePermissionRepository
                   name: true,
                   path: true,
                   icon: true,
+                  functionalityType: {
+                    select: {
+                      name: true,
+                    },
+                  },
                 },
               },
             },

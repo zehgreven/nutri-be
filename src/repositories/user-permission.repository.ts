@@ -59,6 +59,11 @@ export class UserPermissionRepository
                 name: true,
                 path: true,
                 icon: true,
+                functionalityType: {
+                  select: {
+                    name: true,
+                  },
+                },
               },
             },
           },
