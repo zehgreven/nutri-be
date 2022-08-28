@@ -74,11 +74,13 @@ export class ProfilePermissionRepository
               id: true,
               name: true,
               path: true,
+              icon: true,
               master: {
                 select: {
                   id: true,
                   name: true,
                   path: true,
+                  icon: true,
                 },
               },
             },
