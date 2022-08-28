@@ -79,6 +79,8 @@ export class ProfilePermissionRepository
         },
         where: {
           profileId: userProfile.profile.id,
+          active: true,
+          allow: true,
           functionality: {
             active: true,
           },
