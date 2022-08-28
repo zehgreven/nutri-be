@@ -21,6 +21,7 @@ import { ProfilePermissionControllerV1 } from './controllers/profile-permission.
 import { UserPermissionControllerV1 } from './controllers/user-permission.v1';
 import { UserProfileControllerV1 } from './controllers/user-profile.v1';
 import { UserProfileRepository } from './repositories/user-profile.repository';
+import { AuthControllerV1 } from './controllers/auth.v1';
 
 export class SetupServer extends Server {
   constructor(private port = 3000) {
@@ -58,7 +59,9 @@ export class SetupServer extends Server {
   }
 
   private setupControllers(): void {
-    const userControllerV1 = new UserControllerV1(new UserRepository());
+    const userRepository = new UserRepository();
+    const profileRepository = new ProfileRepository();
+    const userControllerV1 = new UserControllerV1(userRepository);
     const functionalityTypeControllerV1 = new FunctionalityTypeControllerV1(
       new FunctionalityTypeRepository(),
     );
@@ -71,16 +74,15 @@ export class SetupServer extends Server {
     const userPermissionControllerV1 = new UserPermissionControllerV1(
       new UserPermissionRepository(),
     );
-    const profileControllerV1 = new ProfileControllerV1(
-      new ProfileRepository(),
-    );
+    const profileControllerV1 = new ProfileControllerV1(profileRepository);
     const clientControllerV1 = new ClientControllerV1(
-      new UserRepository(),
-      new ProfileRepository(),
+      userRepository,
+      profileRepository,
     );
     const userProfileControllerV1 = new UserProfileControllerV1(
       new UserProfileRepository(),
     );
+    const authControllerV1 = new AuthControllerV1(userRepository);
 
     this.addControllers([
       userControllerV1,
@@ -91,6 +93,7 @@ export class SetupServer extends Server {
       profileControllerV1,
       clientControllerV1,
       userProfileControllerV1,
+      authControllerV1,
     ]);
   }
 

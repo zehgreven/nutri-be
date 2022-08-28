@@ -36,41 +36,6 @@ export class UserControllerV1 extends BaseController {
     }
   }
 
-  @Post('authenticate')
-  public async authenticate(
-    req: Request,
-    res: Response,
-  ): Promise<Response | void> {
-    const { username, password } = req.body;
-    if (!username || !password) {
-      return this.sendErrorResponse(res, {
-        code: 401,
-        message: 'User not found!',
-        description: 'Try verifying your email address.',
-      });
-    }
-
-    const user = await this.repository.findOneByUsername(username);
-    if (!user) {
-      return this.sendErrorResponse(res, {
-        code: 401,
-        message: 'User not found!',
-        description: 'Try verifying your email address.',
-      });
-    }
-
-    if (!(await AuthService.comparePasswords(password, user.password))) {
-      return this.sendErrorResponse(res, {
-        code: 401,
-        message: 'Password does not match!',
-      });
-    }
-
-    const token = AuthService.generateToken(user.id);
-
-    return res.status(StatusCodes.OK).send({ token });
-  }
-
   @Put(':id')
   @Middleware(authMiddleware)
   public async update(req: Request, res: Response): Promise<void> {

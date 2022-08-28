@@ -6,6 +6,11 @@ export interface JwtToken {
   sub: string;
 }
 
+export interface AppToken {
+  token: string;
+  'refresh-token': string;
+}
+
 export default class AuthService {
   public static async hashPassword(
     password: string,
@@ -21,10 +26,18 @@ export default class AuthService {
     return await bcrypt.compare(password, hashedPasword);
   }
 
-  public static generateToken(sub: string): string {
-    return jwt.sign({ sub }, config.get('auth.key'), {
-      expiresIn: config.get('auth.tokenExpiresIn'),
-    });
+  public static generateToken(sub: string): AppToken {
+    return {
+      token: jwt.sign({ sub }, config.get('auth.key'), {
+        expiresIn: Number.parseInt(config.get('auth.tokenExpiresIn'), 10),
+      }),
+      'refresh-token': jwt.sign({ sub }, config.get('auth.key'), {
+        expiresIn: Number.parseInt(
+          config.get('auth.refreshTokenExpiresIn'),
+          10,
+        ),
+      }),
+    };
   }
 
   public static decodeToken(token: string): JwtToken {
