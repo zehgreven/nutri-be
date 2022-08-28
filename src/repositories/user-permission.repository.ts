@@ -47,6 +47,13 @@ export class UserPermissionRepository
             id: true,
             name: true,
             path: true,
+            master: {
+              select: {
+                id: true,
+                name: true,
+                path: true,
+              },
+            },
           },
         },
       },
