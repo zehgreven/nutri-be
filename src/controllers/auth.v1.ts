@@ -7,7 +7,7 @@ import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
 
 @Controller('auth/v1')
-@ClassMiddleware(rateLimiter)
+// @ClassMiddleware(rateLimiter)
 export class AuthControllerV1 extends BaseController {
   constructor(private repository: UserRepository) {
     super();
@@ -55,7 +55,10 @@ export class AuthControllerV1 extends BaseController {
       const token = await AuthService.refreshToken(refreshToken);
       return res.status(StatusCodes.OK).send(token);
     } catch (error) {
-      return res.status(StatusCodes.UNAUTHORIZED).send();
+      this.sendErrorResponse(res, {
+        code: StatusCodes.BAD_REQUEST,
+        message: 'Sua sessão expirou',
+      });
     }
   }
 }
