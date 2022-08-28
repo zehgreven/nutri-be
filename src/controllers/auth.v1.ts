@@ -50,8 +50,12 @@ export class AuthControllerV1 extends BaseController {
 
   @Post('refresh')
   public async refresh(req: Request, res: Response) {
-    const refreshToken = req.body['refresh-token'];
-    const token = await AuthService.refreshToken(refreshToken);
-    return res.status(StatusCodes.OK).send(token);
+    try {
+      const refreshToken = req.body['refresh-token'];
+      const token = await AuthService.refreshToken(refreshToken);
+      return res.status(StatusCodes.OK).send(token);
+    } catch (error) {
+      return res.status(StatusCodes.UNAUTHORIZED).send();
+    }
   }
 }
