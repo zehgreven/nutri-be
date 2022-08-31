@@ -56,7 +56,7 @@ export class AuthControllerV1 extends BaseController {
       return res.status(StatusCodes.OK).send(token);
     } catch (error) {
       this.sendErrorResponse(res, {
-        code: StatusCodes.BAD_REQUEST,
+        code: StatusCodes.UNAUTHORIZED,
         message: 'Sua sessão expirou',
       });
     }
