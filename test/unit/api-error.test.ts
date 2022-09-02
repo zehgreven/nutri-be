@@ -1,4 +1,4 @@
-import ApiErrorTransformer from '@src/errors/api-error';
+import ApiError from '@src/errors/api-error';
 
 describe('ApiError', () => {
   const defaultErrorMessage = 'Error message';
@@ -6,7 +6,7 @@ describe('ApiError', () => {
     'This error happens when there is no bla bla bla';
   const defaultErrorDocumentation = 'https://mydocs.com/error-404';
   it('Should format error with mandatory fields', () => {
-    const error = ApiErrorTransformer.format({
+    const error = ApiError.format({
       code: 404,
       message: defaultErrorMessage,
     });
@@ -18,7 +18,7 @@ describe('ApiError', () => {
   });
 
   it('Should format error with mandatory fields and description', () => {
-    const error = ApiErrorTransformer.format({
+    const error = ApiError.format({
       code: 404,
       message: defaultErrorMessage,
       description: defaultErrorDescription,
@@ -32,7 +32,7 @@ describe('ApiError', () => {
   });
 
   it('Should format error with mandatory fields and documentation', () => {
-    const error = ApiErrorTransformer.format({
+    const error = ApiError.format({
       code: 404,
       message: defaultErrorMessage,
       documentation: defaultErrorDocumentation,
@@ -46,7 +46,7 @@ describe('ApiError', () => {
   });
 
   it('Should format error with mandatory fields and codeAsString', () => {
-    const error = ApiErrorTransformer.format({
+    const error = ApiError.format({
       code: 404,
       message: defaultErrorMessage,
       documentation: defaultErrorDocumentation,
