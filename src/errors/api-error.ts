@@ -8,12 +8,12 @@ export interface APIError {
   documentation?: string;
 }
 
-export interface APIErrorReqsponse extends Omit<APIError, 'codeAsString'> {
+export interface APIErrorResponse extends Omit<APIError, 'codeAsString'> {
   error: string;
 }
 
 export default class ApiError {
-  public static format(error: APIError): APIErrorReqsponse {
+  public static format(error: APIError): APIErrorResponse {
     return {
       ...{
         message: error.message,
