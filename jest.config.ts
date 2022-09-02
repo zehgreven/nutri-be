@@ -12,7 +12,7 @@ const config: Config = {
     '@src/(.*)': '<rootDir>/src/$1',
     '@test/(.*)': '<rootDir>/test/$1',
   },
-  testMatch: ['<rootDir>/test/unit/**/*.test.ts'],
+  testMatch: ['<rootDir>/src/**/*.test.ts'],
   // COVERAGE
   collectCoverage: true,
   collectCoverageFrom: ['<rootDir>/src/**'],
