@@ -1,12 +1,15 @@
-/* eslint-disable */
-const { resolve } = require('path');
-const root = resolve(__dirname) + '/../../../';
-const rootConfig = require(`${root}/jest.config.js`);
+import type { Config } from 'jest';
+import { resolve } from 'path';
+import rootConfig from '../../../jest.config';
 
-module.exports = {
+const root = resolve(__dirname) + '/../../../';
+
+const config: Config = {
   ...rootConfig,
   rootDir: root,
   displayName: 'integration-tests',
   setupFilesAfterEnv: ['<rootDir>/test/integration/config/jest-setup.ts'],
   testMatch: ['<rootDir>/test/integration/**/*.test.ts'],
 };
+
+export default config;
