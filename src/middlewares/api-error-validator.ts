@@ -6,7 +6,7 @@ export interface HTTPError extends Error {
   status?: number;
 }
 
-export function apiERrorValidator(
+export function apiErrorValidator(
   error: HTTPError,
   _: Partial<Request>,
   res: Response,

@@ -10,7 +10,7 @@ import { FunctionalityControllerV1 } from './controllers/functionality.v1';
 import { ProfileControllerV1 } from './controllers/profile.v1';
 import { UserControllerV1 } from './controllers/user.v1';
 import logger from './logger';
-import { apiERrorValidator } from './middlewares/api-error-validator';
+import { apiErrorValidator } from './middlewares/api-error-validator';
 import { UserRepository } from './repositories/user.repository';
 import { FunctionalityTypeRepository } from './repositories/functionality-type.repository';
 import { FunctionalityRepository } from './repositories/functionality.repository';
@@ -55,7 +55,7 @@ export class SetupServer extends Server {
   }
 
   private setupErrorHandlers(): void {
-    this.getApp().use(apiERrorValidator);
+    this.getApp().use(apiErrorValidator);
   }
 
   private setupControllers(): void {
