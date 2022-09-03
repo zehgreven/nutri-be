@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import config from 'config';
-import logger from '@src/logger';
+import jwt from 'jsonwebtoken';
 
 export interface JwtToken {
   sub: string;
@@ -48,7 +47,7 @@ export default class AuthService {
 
     const decoded = await this.decodeToken(token);
 
-    if (!decoded?.sub) {
+    if (!decoded.sub) {
       throw new Error('Token is invalid');
     }
 
