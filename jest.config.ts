@@ -18,8 +18,10 @@ const config: Config = {
   collectCoverageFrom: ['<rootDir>/src/**'],
   coveragePathIgnorePatterns: [
     '<rootDir>/node_modules',
+    '<rootDir>/src/*',
     '<rootDir>/src/generated/',
     '<rootDir>/src/controllers/',
+    '<rootDir>/src/repositories/',
   ],
   coverageThreshold: {
     global: {
