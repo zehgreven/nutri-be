@@ -10,6 +10,8 @@ const config: Config = {
   displayName: 'integration-tests',
   setupFilesAfterEnv: ['<rootDir>/test/integration/config/jest-setup.ts'],
   testMatch: ['<rootDir>/test/integration/**/*.test.ts'],
+  collectCoverageFrom: ['<rootDir>/src/controllers/**'],
+  coveragePathIgnorePatterns: [],
 };
 
 export default config;
