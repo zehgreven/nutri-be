@@ -1,4 +1,10 @@
-import { ClassMiddleware, Controller, Get } from '@overnightjs/core';
+import {
+  ClassMiddleware,
+  Controller,
+  Get,
+  Middleware,
+} from '@overnightjs/core';
+import { authMiddleware } from '@src/middlewares/auth';
 import { rateLimiter } from '@src/middlewares/rate-limit';
 import { ProfileRepository } from '@src/repositories/profile.repository';
 import { UserRepository } from '@src/repositories/user.repository';
@@ -16,18 +22,18 @@ export class ClientControllerV1 extends BaseController {
   }
 
   @Get('')
-  // @Middleware(authMiddleware)
+  @Middleware(authMiddleware)
   public async getAuthenticatedUser(
     req: Request,
     res: Response,
   ): Promise<Response> {
-    // const userId = req.context?.userId;
-    // if (!userId) {
-    //   return this.sendErrorResponse(res, {
-    //     code: 404,
-    //     message: 'user id not provided',
-    //   });
-    // }
+    const userId = req.context?.userId;
+    if (!userId) {
+      return this.sendErrorResponse(res, {
+        code: 404,
+        message: 'user id not provided',
+      });
+    }
     const profile = await this.profileRepository.findOne({ name: 'Cliente' });
     if (!profile) {
       return this.sendErrorResponse(res, {
