@@ -17,8 +17,8 @@ jest.setTimeout(20000);
 
 beforeAll(async () => {
   environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
-    .withWaitStrategy('mongodb', Wait.forHealthCheck())
-    .up(['mongodb']);
+    .withWaitStrategy('postgres', Wait.forHealthCheck())
+    .up(['postgres']);
 
   server = new SetupServer();
   await server.init();
