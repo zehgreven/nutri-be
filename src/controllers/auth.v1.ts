@@ -55,7 +55,7 @@ export class AuthControllerV1 extends BaseController {
       const token = await AuthService.refreshToken(refreshToken);
       return res.status(StatusCodes.OK).send(token);
     } catch (error) {
-      this.sendErrorResponse(res, {
+      return this.sendErrorResponse(res, {
         code: StatusCodes.UNAUTHORIZED,
         message: 'Sua sessão expirou',
       });

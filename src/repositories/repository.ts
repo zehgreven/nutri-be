@@ -106,15 +106,20 @@ export class BaseRepository<T> extends AbstractRepository<T> {
     }
   }
 
-  protected buildWhere(options: Partial<T>) {
-    const where = {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  protected buildWhere(options: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const where: any = {};
     Object.entries({ ...options }).map((val, _, __) => {
-      if (typeof options[val[0]] === 'string') {
-        where[val[0]] = { contains: val[1], mode: 'insensitive' };
-      } else if (typeof options[val[0]] === 'array') {
-        where[val[0]] = { in: val[1] };
+      const key = val[0];
+      const value = val[1];
+
+      if (typeof options[key] === 'string') {
+        where[key] = { contains: value, mode: 'insensitive' };
+      } else if (Array.isArray(options[key])) {
+        where[key] = { in: value };
       } else {
-        where[val[0]] = val[1];
+        where[key] = value;
       }
     });
     return where;

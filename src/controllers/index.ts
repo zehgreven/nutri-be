@@ -1,6 +1,6 @@
 import ApiError, { APIError } from '@src/errors/api-error';
 import logger from '@src/logger';
-import { Paging } from '@src/repositories/default-mongodb-repository';
+import { Paging } from '@src/repositories';
 import {
   DatabaseError,
   DatabaseInternalError,
