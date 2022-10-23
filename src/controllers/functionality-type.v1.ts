@@ -7,7 +7,10 @@ import {
   Put,
 } from '@overnightjs/core';
 import logger from '@src/logger';
-import { authMiddleware } from '@src/middlewares/auth';
+import {
+  authMiddleware,
+  userIdValidationMiddleware,
+} from '@src/middlewares/auth';
 import { rateLimiter } from '@src/middlewares/rate-limit';
 import { FunctionalityTypeRepository } from '@src/repositories/functionality-type.repository';
 import { Request, Response } from 'express';
@@ -15,8 +18,7 @@ import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
 
 @Controller('functionality-type/v1')
-@ClassMiddleware(authMiddleware)
-@ClassMiddleware(rateLimiter)
+@ClassMiddleware([rateLimiter, authMiddleware, userIdValidationMiddleware])
 export class FunctionalityTypeControllerV1 extends BaseController {
   constructor(private repository: FunctionalityTypeRepository) {
     super();
@@ -25,15 +27,6 @@ export class FunctionalityTypeControllerV1 extends BaseController {
   @Post('')
   public async create(req: Request, res: Response): Promise<void> {
     try {
-      if (!req.context?.userId) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing userId');
-        return;
-      }
-
       const result = await this.repository.create(req.body);
       res.status(StatusCodes.CREATED).send(result);
     } catch (error) {
@@ -44,15 +37,6 @@ export class FunctionalityTypeControllerV1 extends BaseController {
   @Put(':id')
   public async update(req: Request, res: Response): Promise<void> {
     try {
-      if (!req.context?.userId) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing userId');
-        return;
-      }
-
       const requestParamId = req.params?.id;
 
       if (!requestParamId) {
@@ -74,15 +58,6 @@ export class FunctionalityTypeControllerV1 extends BaseController {
   @Delete(':id')
   public async delete(req: Request, res: Response): Promise<void> {
     try {
-      if (!req.context?.userId) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing userId');
-        return;
-      }
-
       const requestParamId = req.params?.id;
 
       if (!requestParamId) {
@@ -104,15 +79,6 @@ export class FunctionalityTypeControllerV1 extends BaseController {
   @Get('')
   public async getAll(req: Request, res: Response): Promise<void> {
     try {
-      if (!req.context?.userId) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing userId');
-        return;
-      }
-
       const result = await this.repository.findAll(
         this.queryWithoutPagination(req),
         this.paginated(req),
@@ -129,15 +95,6 @@ export class FunctionalityTypeControllerV1 extends BaseController {
   @Get(':id')
   public async getById(req: Request, res: Response): Promise<void> {
     try {
-      if (!req.context?.userId) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing userId');
-        return;
-      }
-
       if (!req.params?.id) {
         this.sendErrorResponse(res, {
           code: StatusCodes.INTERNAL_SERVER_ERROR,

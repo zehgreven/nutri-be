@@ -7,14 +7,16 @@ import {
   Put,
 } from '@overnightjs/core';
 import logger from '@src/logger';
-import { authMiddleware } from '@src/middlewares/auth';
+import {
+  authMiddleware,
+  userIdValidationMiddleware,
+} from '@src/middlewares/auth';
 import { rateLimiter } from '@src/middlewares/rate-limit';
 import { UserRepository } from '@src/repositories/user.repository';
-import AuthService from '@src/services/auth.service';
+import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
-import bcrypt from 'bcrypt';
 
 @Controller('user/v1')
 @ClassMiddleware(rateLimiter)
@@ -37,7 +39,7 @@ export class UserControllerV1 extends BaseController {
   }
 
   @Put(':id')
-  @Middleware(authMiddleware)
+  @Middleware([authMiddleware, userIdValidationMiddleware])
   public async update(req: Request, res: Response): Promise<void> {
     try {
       if (!req.context?.userId) {
@@ -68,7 +70,7 @@ export class UserControllerV1 extends BaseController {
   }
 
   @Get('me')
-  @Middleware(authMiddleware)
+  @Middleware([authMiddleware, userIdValidationMiddleware])
   public async getAuthenticatedUser(
     req: Request,
     res: Response,
@@ -93,7 +95,7 @@ export class UserControllerV1 extends BaseController {
   }
 
   @Get(':id')
-  @Middleware(authMiddleware)
+  @Middleware([authMiddleware, userIdValidationMiddleware])
   public async getById(req: Request, res: Response): Promise<void> {
     try {
       if (!req.context?.userId) {
@@ -127,7 +129,7 @@ export class UserControllerV1 extends BaseController {
   }
 
   @Get('')
-  @Middleware(authMiddleware)
+  @Middleware([authMiddleware, userIdValidationMiddleware])
   public async findAll(req: Request, res: Response): Promise<void> {
     try {
       if (!req.context?.userId) {

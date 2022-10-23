@@ -1,6 +1,9 @@
 import { ClassMiddleware, Controller, Get, Post, Put } from '@overnightjs/core';
 import logger from '@src/logger';
-import { authMiddleware } from '@src/middlewares/auth';
+import {
+  authMiddleware,
+  userIdValidationMiddleware,
+} from '@src/middlewares/auth';
 import { rateLimiter } from '@src/middlewares/rate-limit';
 import { ProfilePermissionRepository } from '@src/repositories/profile-permission.repository';
 import { Request, Response } from 'express';
@@ -8,8 +11,7 @@ import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
 
 @Controller('profile-permission/v1')
-@ClassMiddleware(authMiddleware)
-@ClassMiddleware(rateLimiter)
+@ClassMiddleware([rateLimiter, authMiddleware, userIdValidationMiddleware])
 export class ProfilePermissionControllerV1 extends BaseController {
   constructor(private repository: ProfilePermissionRepository) {
     super();

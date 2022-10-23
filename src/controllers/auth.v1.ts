@@ -1,5 +1,4 @@
-import { ClassMiddleware, Controller, Post } from '@overnightjs/core';
-import { rateLimiter } from '@src/middlewares/rate-limit';
+import { Controller, Post } from '@overnightjs/core';
 import { UserRepository } from '@src/repositories/user.repository';
 import AuthService from '@src/services/auth.service';
 import { Request, Response } from 'express';
