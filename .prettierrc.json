@@ -10,5 +10,6 @@
   "tabWidth": 2,
   "singleQuote": true,
   "singleAttributePerLine": true,
-  "quoteProps": "as-needed"
+  "quoteProps": "as-needed",
+  "printWidth": 120
 }
