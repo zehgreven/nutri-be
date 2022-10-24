@@ -1,18 +1,7 @@
-import {
-  ClassMiddleware,
-  Controller,
-  Delete,
-  Get,
-  Post,
-  Put,
-} from '@overnightjs/core';
-import logger from '@src/logger';
-import {
-  authMiddleware,
-  userIdValidationMiddleware,
-} from '@src/middlewares/auth';
+import { ClassMiddleware, Controller, Delete, Get, Post, Put } from '@overnightjs/core';
+import { authMiddleware, userIdValidationMiddleware } from '@src/middlewares/auth';
 import { rateLimiter } from '@src/middlewares/rate-limit';
-import { ProfileRepository } from '@src/repositories/profile.repository';
+import { ProfileService } from '@src/services/profile.service';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
@@ -20,23 +9,14 @@ import { BaseController } from '.';
 @Controller('profile/v1')
 @ClassMiddleware([rateLimiter, authMiddleware, userIdValidationMiddleware])
 export class ProfileControllerV1 extends BaseController {
-  constructor(private repository: ProfileRepository) {
+  constructor(private service: ProfileService) {
     super();
   }
 
   @Post('')
   public async create(req: Request, res: Response): Promise<void> {
     try {
-      if (!req.context?.userId) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing userId');
-        return;
-      }
-
-      const result = await this.repository.create(req.body);
+      const result = await this.service.create(req.body);
       res.status(201).send(result);
     } catch (error) {
       this.sendCreateUpdateErrorResponse(res, error);
@@ -46,27 +26,8 @@ export class ProfileControllerV1 extends BaseController {
   @Put(':id')
   public async update(req: Request, res: Response): Promise<void> {
     try {
-      if (!req.context?.userId) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing userId');
-        return;
-      }
-
       const requestParamId = req.params?.id;
-
-      if (!requestParamId) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing parameter id');
-        return;
-      }
-
-      await this.repository.update(requestParamId, req.body);
+      await this.service.update(requestParamId, req.body);
       res.status(StatusCodes.NO_CONTENT).send();
     } catch (error) {
       this.sendCreateUpdateErrorResponse(res, error);
@@ -74,21 +35,9 @@ export class ProfileControllerV1 extends BaseController {
   }
 
   @Get('')
-  public async findAll(req: Request, res: Response): Promise<void> {
+  public async getAll(req: Request, res: Response): Promise<void> {
     try {
-      if (!req.context?.userId) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing userId');
-        return;
-      }
-
-      const result = await this.repository.findAll(
-        this.queryWithoutPagination(req),
-        this.paginated(req),
-      );
+      const result = await this.service.getAll(this.queryWithoutPagination(req), this.paginated(req));
       res.status(StatusCodes.OK).send(result);
     } catch (error) {
       this.sendErrorResponse(res, {
@@ -101,27 +50,7 @@ export class ProfileControllerV1 extends BaseController {
   @Get(':id')
   public async getById(req: Request, res: Response): Promise<void> {
     try {
-      if (!req.context?.userId) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing userId');
-        return;
-      }
-
-      if (!req.params?.id) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing parameter id');
-        return;
-      }
-
-      const result = await this.repository.findOne({
-        id: req.params.id,
-      });
+      const result = await this.service.getById(req.params.id);
       res.status(StatusCodes.OK).send(result);
     } catch (error) {
       this.sendErrorResponse(res, {
@@ -134,27 +63,8 @@ export class ProfileControllerV1 extends BaseController {
   @Delete(':id')
   public async delete(req: Request, res: Response): Promise<void> {
     try {
-      if (!req.context?.userId) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing userId');
-        return;
-      }
-
       const requestParamId = req.params?.id;
-
-      if (!requestParamId) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing parameter id');
-        return;
-      }
-
-      await this.repository.delete(requestParamId);
+      await this.service.delete(requestParamId);
       res.status(StatusCodes.NO_CONTENT).send();
     } catch (error) {
       this.sendCreateUpdateErrorResponse(res, error);
@@ -162,21 +72,9 @@ export class ProfileControllerV1 extends BaseController {
   }
 
   @Get('user/:userId')
-  public async findFunctionalitiesByUser(
-    req: Request,
-    res: Response,
-  ): Promise<void> {
+  public async findProfilesByUser(req: Request, res: Response): Promise<void> {
     try {
-      if (!req.context?.userId) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing userId');
-        return;
-      }
-
-      const result = await this.repository.findProfilesByUser(
+      const result = await this.service.findProfilesByUser(
         req.params?.userId,
         this.queryWithoutPagination(req),
         this.paginated(req),

@@ -25,6 +25,7 @@ import { AuthControllerV1 } from './controllers/auth.v1';
 import { FunctionalityTypeService } from './services/functionality-type.service';
 import { FunctionalityService } from './services/functionality.service';
 import { ProfilePermissionService } from './services/profile-permission.service';
+import { ProfileService } from './services/profile.service';
 
 export class SetupServer extends Server {
   constructor(private port = 3000) {
@@ -75,6 +76,7 @@ export class SetupServer extends Server {
     const functionalityTypeService = new FunctionalityTypeService(functionalityTypeRepository);
     const functionalityService = new FunctionalityService(functionalityRepository);
     const profilePermissionService = new ProfilePermissionService(profilePermissionRepository);
+    const profileService = new ProfileService(profileRepository);
 
     // Controllers
     const userControllerV1 = new UserControllerV1(userRepository);
@@ -82,7 +84,7 @@ export class SetupServer extends Server {
     const functionalityControllerV1 = new FunctionalityControllerV1(functionalityService);
     const profilePermissionControllerV1 = new ProfilePermissionControllerV1(profilePermissionService);
     const userPermissionControllerV1 = new UserPermissionControllerV1(userPermissionRepository);
-    const profileControllerV1 = new ProfileControllerV1(profileRepository);
+    const profileControllerV1 = new ProfileControllerV1(profileService);
     const clientControllerV1 = new ClientControllerV1(userRepository, profileRepository);
     const userProfileControllerV1 = new UserProfileControllerV1(userProfileRepository);
     const authControllerV1 = new AuthControllerV1(userRepository);
