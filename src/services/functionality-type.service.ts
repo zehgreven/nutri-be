@@ -1,5 +1,5 @@
 import { FunctionalityType } from '@src/generated/client';
-import { FunctionalityRepository } from '@src/repositories/functionality.repository';
+import { FunctionalityTypeRepository } from '@src/repositories/functionality-type.repository';
 import { BaseCrudService } from '.';
 
-export class FunctionalityTypeService extends BaseCrudService<FunctionalityRepository, FunctionalityType> {}
+export class FunctionalityTypeService extends BaseCrudService<FunctionalityTypeRepository, FunctionalityType> {}
