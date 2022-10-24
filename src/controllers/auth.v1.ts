@@ -1,4 +1,5 @@
-import { Controller, Post } from '@overnightjs/core';
+import { ClassMiddleware, Controller, Post } from '@overnightjs/core';
+import { rateLimiter } from '@src/middlewares/rate-limit';
 import { UserRepository } from '@src/repositories/user.repository';
 import AuthService from '@src/services/auth.service';
 import { Request, Response } from 'express';
@@ -6,7 +7,7 @@ import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
 
 @Controller('auth/v1')
-// @ClassMiddleware(rateLimiter)
+@ClassMiddleware(rateLimiter)
 export class AuthControllerV1 extends BaseController {
   constructor(private repository: UserRepository) {
     super();
