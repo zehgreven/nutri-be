@@ -1,5 +1,5 @@
 import logger from '@src/logger';
-import { IBaseCrudRepository } from '@src/repositories';
+import { BaseRepository } from '@src/repositories/repository';
 import { NoId } from '@src/util/id-utils';
 import { Paginated, Paging } from '@src/util/page-utils';
 
@@ -19,8 +19,8 @@ export abstract class AbstractCrudService<T> implements IBaseCrudService<T> {
   public abstract getById(id: string): Promise<T | null>;
 }
 
-export class BaseCrudService<T> extends AbstractCrudService<T> {
-  constructor(protected repository: IBaseCrudRepository<T>) {
+export class BaseCrudService<R extends BaseRepository<T>, T> extends AbstractCrudService<T> {
+  constructor(protected repository: R) {
     super();
   }
 

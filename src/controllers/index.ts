@@ -11,10 +11,7 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 export abstract class BaseController {
-  protected sendCreateUpdateErrorResponse(
-    res: Response,
-    error: unknown,
-  ): Response {
+  protected sendCreateUpdateErrorResponse(res: Response, error: unknown): Response {
     if (
       error instanceof DatabaseInternalError ||
       error instanceof DatabaseValidationError ||
