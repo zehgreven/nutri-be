@@ -1,6 +1,6 @@
 import { Prisma } from '@src/generated/client';
 import logger from '@src/logger';
-import { IBaseRepository, NoId, Paginated, Paging } from '.';
+import { IBaseCrudRepository, NoId, Paginated, Paging } from '.';
 
 export class DatabaseError extends Error {
   constructor(message: string) {
@@ -14,14 +14,11 @@ export class DatabaseUnknownClientError extends DatabaseError {}
 
 export class DatabaseInternalError extends DatabaseError {}
 
-export abstract class AbstractRepository<T> implements IBaseRepository<T> {
+export abstract class AbstractRepository<T> implements IBaseCrudRepository<T> {
   public abstract create(data: NoId<T>): Promise<T>;
   public abstract update(id: string, data: T): Promise<T>;
   public abstract delete(id: string): Promise<T>;
-  public abstract findAll(
-    options: Partial<T>,
-    paging: Paging,
-  ): Promise<Paginated<T>>;
+  public abstract findAll(options: Partial<T>, paging: Paging): Promise<Paginated<T>>;
   public abstract findOne(options: Partial<T>): Promise<T | null>;
   public abstract deleteAll(): Promise<Prisma.BatchPayload>;
 }
@@ -67,10 +64,7 @@ export class BaseRepository<T> extends AbstractRepository<T> {
     return {};
   }
 
-  public async findAll(
-    options: Partial<T>,
-    paging: Paging,
-  ): Promise<Paginated<T>> {
+  public async findAll(options: Partial<T>, paging: Paging): Promise<Paginated<T>> {
     try {
       const { limit, page } = paging;
 
@@ -143,23 +137,11 @@ export class BaseRepository<T> extends AbstractRepository<T> {
       throw new DatabaseUnknownClientError(message);
     }
     logger.warn(`Database ${error}`);
-    throw new DatabaseInternalError(
-      'Something unexpected happened to the database',
-    );
+    throw new DatabaseInternalError('Something unexpected happened to the database');
   }
 
   private isDatabaseValidationError(code: string): boolean {
-    return [
-      'P2000',
-      'P2002',
-      'P2003',
-      'P2004',
-      'P2007',
-      'P2011',
-      'P2012',
-      'P2020',
-      'P2033',
-    ].includes(code);
+    return ['P2000', 'P2002', 'P2003', 'P2004', 'P2007', 'P2011', 'P2012', 'P2020', 'P2033'].includes(code);
   }
 
   private formatDatabaseError(code: string): string {

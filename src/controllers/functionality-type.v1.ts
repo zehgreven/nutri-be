@@ -12,7 +12,7 @@ import {
   userIdValidationMiddleware,
 } from '@src/middlewares/auth';
 import { rateLimiter } from '@src/middlewares/rate-limit';
-import { FunctionalityTypeRepository } from '@src/repositories/functionality-type.repository';
+import { FunctionalityTypeService } from '@src/services/functionality-type.service';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
@@ -20,14 +20,14 @@ import { BaseController } from '.';
 @Controller('functionality-type/v1')
 @ClassMiddleware([rateLimiter, authMiddleware, userIdValidationMiddleware])
 export class FunctionalityTypeControllerV1 extends BaseController {
-  constructor(private repository: FunctionalityTypeRepository) {
+  constructor(private service: FunctionalityTypeService) {
     super();
   }
 
   @Post('')
   public async create(req: Request, res: Response): Promise<void> {
     try {
-      const result = await this.repository.create(req.body);
+      const result = await this.service.create(req.body);
       res.status(StatusCodes.CREATED).send(result);
     } catch (error) {
       this.sendCreateUpdateErrorResponse(res, error);
@@ -38,17 +38,7 @@ export class FunctionalityTypeControllerV1 extends BaseController {
   public async update(req: Request, res: Response): Promise<void> {
     try {
       const requestParamId = req.params?.id;
-
-      if (!requestParamId) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing parameter id');
-        return;
-      }
-
-      await this.repository.update(requestParamId, req.body);
+      await this.service.update(requestParamId, req.body);
       res.status(StatusCodes.NO_CONTENT).send();
     } catch (error) {
       this.sendCreateUpdateErrorResponse(res, error);
@@ -59,17 +49,7 @@ export class FunctionalityTypeControllerV1 extends BaseController {
   public async delete(req: Request, res: Response): Promise<void> {
     try {
       const requestParamId = req.params?.id;
-
-      if (!requestParamId) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing parameter id');
-        return;
-      }
-
-      await this.repository.delete(requestParamId);
+      await this.service.delete(requestParamId);
       res.status(StatusCodes.NO_CONTENT).send();
     } catch (error) {
       this.sendCreateUpdateErrorResponse(res, error);
@@ -79,7 +59,7 @@ export class FunctionalityTypeControllerV1 extends BaseController {
   @Get('')
   public async getAll(req: Request, res: Response): Promise<void> {
     try {
-      const result = await this.repository.findAll(
+      const result = await this.service.getAll(
         this.queryWithoutPagination(req),
         this.paginated(req),
       );
@@ -95,17 +75,8 @@ export class FunctionalityTypeControllerV1 extends BaseController {
   @Get(':id')
   public async getById(req: Request, res: Response): Promise<void> {
     try {
-      if (!req.params?.id) {
-        this.sendErrorResponse(res, {
-          code: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Something went wrong',
-        });
-        logger.error('Missing parameter id');
-        return;
-      }
-      const result = await this.repository.findOne({
-        id: req.params.id,
-      });
+      const requestParamId = req.params?.id;
+      const result = await this.service.getById(requestParamId);
       res.status(StatusCodes.OK).send(result);
     } catch (error) {
       this.sendErrorResponse(res, {
