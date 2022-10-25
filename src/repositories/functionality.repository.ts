@@ -5,10 +5,7 @@ import { prismaClient } from '@src/database';
 import { IFunctionalityRepository, Paginated, Paging } from '.';
 import { BaseRepository } from './repository';
 
-export class FunctionalityRepository
-  extends BaseRepository<Functionality>
-  implements IFunctionalityRepository
-{
+export class FunctionalityRepository extends BaseRepository<Functionality> implements IFunctionalityRepository {
   constructor() {
     super(prismaClient.functionality);
   }
@@ -109,6 +106,7 @@ export class FunctionalityRepository
             select: {
               id: true,
               allow: true,
+              active: true,
             },
             where: {
               userId,
