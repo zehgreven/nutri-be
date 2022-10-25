@@ -4,17 +4,12 @@ import { prismaClient } from '@src/database';
 import { IUserPermissionRepository } from '.';
 import { BaseRepository } from './repository';
 
-export class UserPermissionRepository
-  extends BaseRepository<UserPermission>
-  implements IUserPermissionRepository
-{
+export class UserPermissionRepository extends BaseRepository<UserPermission> implements IUserPermissionRepository {
   constructor() {
     super(prismaClient.userPermission);
   }
 
-  async updateManyOrCreateMany(
-    permissions: UserPermission[],
-  ): Promise<void | null> {
+  async updateManyOrCreateMany(permissions: UserPermission[]): Promise<void | null> {
     permissions.forEach(async data => {
       const found = await prismaClient.userPermission.findFirst({
         select: {
@@ -72,7 +67,6 @@ export class UserPermissionRepository
       where: {
         userId,
         active: true,
-        allow: true,
         functionality: {
           active: true,
         },
