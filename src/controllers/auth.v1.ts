@@ -1,7 +1,7 @@
 import { ClassMiddleware, Controller, Post } from '@overnightjs/core';
 import { rateLimiter } from '@src/middlewares/rate-limit';
-import { UserRepository } from '@src/repositories/user.repository';
 import AuthService from '@src/services/auth.service';
+import { UserService } from '@src/services/user.service';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { BaseController } from '.';
@@ -9,15 +9,12 @@ import { BaseController } from '.';
 @Controller('auth/v1')
 @ClassMiddleware(rateLimiter)
 export class AuthControllerV1 extends BaseController {
-  constructor(private repository: UserRepository) {
+  constructor(private service: UserService) {
     super();
   }
 
   @Post('authenticate')
-  public async authenticate(
-    req: Request,
-    res: Response,
-  ): Promise<Response | void> {
+  public async authenticate(req: Request, res: Response): Promise<Response | void> {
     const { username, password } = req.body;
     if (!username || !password) {
       return this.sendErrorResponse(res, {
@@ -27,7 +24,7 @@ export class AuthControllerV1 extends BaseController {
       });
     }
 
-    const user = await this.repository.findOneByUsername(username);
+    const user = await this.service.findOneByUsername(username);
     if (!user) {
       return this.sendErrorResponse(res, {
         code: 401,

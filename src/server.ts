@@ -93,7 +93,7 @@ export class SetupServer extends Server {
     const profileControllerV1 = new ProfileControllerV1(profileService);
     const userProfileControllerV1 = new UserProfileControllerV1(userProfileService);
 
-    const authControllerV1 = new AuthControllerV1(userRepository);
+    const authControllerV1 = new AuthControllerV1(userService);
 
     const clientControllerV1 = new ClientControllerV1(userRepository, profileRepository);
 
