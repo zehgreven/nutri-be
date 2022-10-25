@@ -91,9 +91,11 @@ export class SetupServer extends Server {
     const profilePermissionControllerV1 = new ProfilePermissionControllerV1(profilePermissionService);
     const userPermissionControllerV1 = new UserPermissionControllerV1(userPermissionService);
     const profileControllerV1 = new ProfileControllerV1(profileService);
-    const clientControllerV1 = new ClientControllerV1(userRepository, profileRepository);
     const userProfileControllerV1 = new UserProfileControllerV1(userProfileService);
+
     const authControllerV1 = new AuthControllerV1(userRepository);
+
+    const clientControllerV1 = new ClientControllerV1(userRepository, profileRepository);
 
     this.addControllers([
       userControllerV1,
