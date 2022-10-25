@@ -28,6 +28,7 @@ import { ProfilePermissionService } from './services/profile-permission.service'
 import { ProfileService } from './services/profile.service';
 import { UserPermissionService } from './services/user-permission.service';
 import { UserProfileService } from './services/user-profile.service';
+import { UserService } from './services/user.service';
 
 export class SetupServer extends Server {
   constructor(private port = 3000) {
@@ -81,9 +82,10 @@ export class SetupServer extends Server {
     const profileService = new ProfileService(profileRepository);
     const userPermissionService = new UserPermissionService(userPermissionRepository);
     const userProfileService = new UserProfileService(userProfileRepository);
+    const userService = new UserService(userRepository);
 
     // Controllers
-    const userControllerV1 = new UserControllerV1(userRepository);
+    const userControllerV1 = new UserControllerV1(userService);
     const functionalityTypeControllerV1 = new FunctionalityTypeControllerV1(functionalityTypeService);
     const functionalityControllerV1 = new FunctionalityControllerV1(functionalityService);
     const profilePermissionControllerV1 = new ProfilePermissionControllerV1(profilePermissionService);
