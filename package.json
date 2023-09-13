@@ -15,7 +15,8 @@
     "test:integ": "dotenv -e .env -- jest --projects ./test/integration/config --runInBand",
     "test:unit": "dotenv -e .env -- jest",
     "style:check": "prettier --check src/**/*.ts test/**/*.ts",
-    "style:fix": "prettier --write src/**/*.ts test/**/*.ts"
+    "style:fix": "prettier --write src/**/*.ts test/**/*.ts",
+    "db:migrate": "yarn prisma migrate dev"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -59,9 +60,10 @@
     "express-pino-logger": "^7.0.0",
     "express-rate-limit": "^6.5.1",
     "http-status-codes": "^2.2.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "module-alias": "^2.2.2",
     "pino": "^8.3.0",
-    "swagger-ui-express": "^4.5.0"
+    "swagger-ui-express": "^4.5.0",
+    "yarn": "^1.22.19"
   }
 }
